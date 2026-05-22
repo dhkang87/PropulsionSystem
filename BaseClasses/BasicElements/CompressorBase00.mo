@@ -197,19 +197,19 @@ partial model CompressorBase00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   //********** variables of design point **********
-  discrete units.MassFlowRate Wc_1_des(start=Wc_1_init) "corrected mass flow rate, fluid_1, design point" annotation(
+  units.MassFlowRate Wc_1_des(start=Wc_1_init) "corrected mass flow rate, fluid_1, design point" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  discrete unitsNonSI.AngularVelocity_rpm NmechDes(start=Nmech_init) "mechanical rotation speed, rpm" annotation(
+  unitsNonSI.AngularVelocity_rpm NmechDes(start=Nmech_init) "mechanical rotation speed, rpm" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  discrete unitsNonSI.AngularVelocity_rpm Nc_1_des(start=Nc_1_init) annotation(
+  unitsNonSI.AngularVelocity_rpm Nc_1_des(start=Nc_1_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  discrete Real PRdes(start=PR_init) annotation(
+  Real PRdes(start=PR_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );/**/
-  discrete Real effDes(start=eff_init) annotation(
+  Real effDes(start=eff_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   //********** variables relative to design point **********
@@ -226,7 +226,7 @@ partial model CompressorBase00
         );
         */
   //********** flags **********
-  Integer flagEffVal "0:0<eff<1, 1:eff<=0, 2:1<=eff";
+  Integer flagEffVal(start=0) "0:0<eff<1, 1:eff<=0, 2:1<=eff";
   
   /* ---------------------------------------------
       Internal objects

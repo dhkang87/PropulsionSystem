@@ -218,13 +218,13 @@ partial model NozzleBase00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   //********** variables of design point **********
-  discrete Real PRdes(start=PR_init) annotation(
+  Real PRdes(start=PR_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  discrete Real CdThDes(start=CdTh_init) annotation(
+  Real CdThDes(start=CdTh_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  discrete Real CvDes(start=Cv_init) annotation(
+  Real CvDes(start=Cv_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
@@ -313,11 +313,6 @@ partial model NozzleBase00
   //********************************************************************************
 protected
   //********************************************************************************
-initial equation
-  /* ---------------------------------------------
-    determine design point
-  --------------------------------------------- */
-  PRdes = PR;
 //----------
 algorithm
   if(printCmd==true)then
@@ -325,6 +320,7 @@ algorithm
   end if;
   
 equation
+  PRdes = PR;
   
   if(printCmd==true)then
     assert(fluid_1.p <= 0.0, getInstanceName()+", fluid_1.p="+String(fluid_1.p), AssertionLevel.warning);

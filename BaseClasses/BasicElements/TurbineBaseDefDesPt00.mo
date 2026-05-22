@@ -5,7 +5,7 @@ partial model TurbineBaseDefDesPt00
   /********************************************************
       Declaration
   ********************************************************/
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -19,7 +19,7 @@ partial model TurbineBaseDefDesPt00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -33,21 +33,21 @@ partial model TurbineBaseDefDesPt00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.RotationalMachineVariables flange_1_des(
+  PropulsionSystem.Records.RotationalMachineVariables flange_1_des(
     fixed=false,
     HideResult=false
   ) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.RotationalMachineVariables flange_2_des(
+  PropulsionSystem.Records.RotationalMachineVariables flange_2_des(
     fixed=false,
     HideResult=false
   ) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.CompressorVariables variablesDes(
+  PropulsionSystem.Records.CompressorVariables variablesDes(
     fixed=false,
     HideResult=false
   ) annotation(
@@ -62,7 +62,7 @@ initial algorithm
   
 
 //******************************************************************************************
-initial equation
+equation
   //----------
   fluid_1_des.X[1:Medium.nXi]= fluid_1.Xi;
   fluid_1_des.C= port_1.C_outflow;
@@ -111,7 +111,6 @@ initial equation
   
   
 //******************************************************************************************
-equation
   
   
 end TurbineBaseDefDesPt00;

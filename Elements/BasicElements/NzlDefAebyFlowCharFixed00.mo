@@ -54,52 +54,20 @@ model NzlDefAeByFlowCharFixed00
   
   
 //********************************************************************************
-initial algorithm
-  
-  fluid_1_des.m_flow:= m_flow_1_des_paramInput;
-  
-  
+algorithm
   
 //********************************************************************************
-initial equation
+equation
   /* ---------------------------------------------
     determine design point
   --------------------------------------------- */
   fluid_1_des.m_flow= m_flow_1_des_paramInput;
-  fluid_1_des.p= fluid_1.p;
-  fluid_1_des.T= fluid_1.T;
-  //--------------------
-  if (use_u_CdTh == false) then
-    CdThDes= CdThDes_paramInput;
-  elseif (use_u_Cv == true) then
-    CdThDes= u_CdTh;
-  end if;
-  //--------------------
-  if (use_u_Cv == false) then
-    CvDes= CvDes_paramInput;
-  elseif (use_u_Cv == true) then
-    CvDes= u_Cv;
-  end if;
-  //--------------------
-  PR= PRdes;
-  m_flow_th= fluid_1_des.m_flow;
-  
-  
-//********************************************************************************
-algorithm
-  
-//********************************************************************************
-initial equation
-    fluid_1_des.m_flow= m_flow_1_des_paramInput;
-    fluid_1_des.p= p1_init;
-    fluid_1_des.T= T1_init;
-    CdThDes = CdThDes_paramInput;
-    CvDes = CvDes_paramInput;
-    AeThDes= AeTh_init;
-    AmechThDes= AmechTh_init;
-    
-//********************************************************************************
-equation
+  fluid_1_des.p= p1_init;
+  fluid_1_des.T= T1_init;
+  CdThDes = CdThDes_paramInput;
+  CvDes = CvDes_paramInput;
+  AeThDes= AmechThDes * CdThDes;
+  AmechThDes= AmechTh_init;
   
   
   /* ---------------------------------------------

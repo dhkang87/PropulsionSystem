@@ -76,6 +76,8 @@ model TrbCharTable00
     Dialog(group = "Component sizing"));
   parameter unitsNonSI.AngularVelocity_rpm NmechDes_paramInput=3000.0 "" annotation(
     Dialog(group = "Component sizing"));
+  parameter Real PRdes_paramInput = 4.0 "pressure ratio at design point" annotation(
+    Dialog(group = "Component sizing"));
   parameter Real NcTblDes_paramInput = 1.0 "design point definition on characteristics table" annotation(
     Dialog(group = "Component sizing"));
   parameter Real PRtblDes_paramInput = 2.0 "design point definition on table" annotation(
@@ -164,11 +166,6 @@ model TrbCharTable00
 initial algorithm
   
 //********************************************************************************
-initial equation
-  /* ---------------------------------------------
-    determine design point
-  --------------------------------------------- */
-  PRdes = PR;
     
 //********************************************************************************
 algorithm
@@ -236,6 +233,7 @@ equation
   fluid_1_des.T=T1_des_paramInput;
   NmechDes = NmechDes_paramInput;
   effDes= effDes_paramInput;
+  PRdes = PRdes_paramInput;
   
   //----------
   ScalerDesTrb.u_NcTblDes = NcTblDes_paramInput;

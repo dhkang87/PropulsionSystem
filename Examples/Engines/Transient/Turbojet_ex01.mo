@@ -29,7 +29,7 @@ model Turbojet_ex01
     Placement(visible = true, transformation(origin = {39.75, -39.8}, extent = {{-19.75, -15.8}, {19.75, 15.8}}, rotation = 0)));
   PropulsionSystem.Sources.MassFlowSource_T boundary(redeclare package Medium = engineAir, T = 400, X = {1, 0, 0}, nPorts = 1, use_T_in = false, use_m_flow_in = true) annotation(
     Placement(visible = true, transformation(origin = {0, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Mechanics.Rotational.Components.Inertia inertia1(J = 10, a(fixed = true, start = 0), stateSelect = StateSelect.always, w(fixed = false, start = 9000 * Modelica.Constants.pi * 2 / 60))  annotation(
+  Modelica.Mechanics.Rotational.Components.Inertia inertia1(J = 10, phi(fixed = true, start = 0), a(fixed = true, start = 0), stateSelect = StateSelect.always, w(fixed = false, start = 9000 * Modelica.Constants.pi * 2 / 60))  annotation(
     Placement(visible = true, transformation(origin = {30, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   inner PropulsionSystem.EngineSimEnvironment environment annotation(
     Placement(visible = true, transformation(origin = {-90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

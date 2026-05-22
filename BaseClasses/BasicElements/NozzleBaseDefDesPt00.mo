@@ -7,7 +7,7 @@ partial model NozzleBaseDefDesPt00
   /********************************************************
       Declaration
   ********************************************************/
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -21,7 +21,7 @@ partial model NozzleBaseDefDesPt00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -35,11 +35,11 @@ partial model NozzleBaseDefDesPt00
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete units.Area AeThDes(start=AeTh_init) annotation(
+  units.Area AeThDes(start=AeTh_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete units.Area AmechThDes(start=AmechTh_init) annotation(
+  units.Area AmechThDes(start=AmechTh_init) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
@@ -51,7 +51,7 @@ initial algorithm
   
 
 //******************************************************************************************
-initial equation
+equation
   
   //----------
   fluid_1_des.X[1:Medium.nXi]= fluid_1.Xi;
@@ -69,7 +69,6 @@ initial equation
   //----------
   
 //******************************************************************************************
-equation
   
   
 end NozzleBaseDefDesPt00;

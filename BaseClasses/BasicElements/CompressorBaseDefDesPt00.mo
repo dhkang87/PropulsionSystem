@@ -7,7 +7,7 @@ partial model CompressorBaseDefDesPt00
   /********************************************************
       Declaration
   ********************************************************/
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -24,7 +24,7 @@ partial model CompressorBaseDefDesPt00
     s(start=s_fluid_1_init)
   */
   
-  discrete PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
+  PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(
     fixed=false,
     HideResult=false,
     nX=Medium.nXi,
@@ -40,7 +40,7 @@ partial model CompressorBaseDefDesPt00
     s(start=s_fluid_2_init)
   */
   
-  discrete PropulsionSystem.Records.RotationalMachineVariables flange_1_des(
+  PropulsionSystem.Records.RotationalMachineVariables flange_1_des(
     fixed=false,
     HideResult=false
   ) annotation(
@@ -48,14 +48,14 @@ partial model CompressorBaseDefDesPt00
   );
   
   
-  discrete PropulsionSystem.Records.RotationalMachineVariables flange_2_des(
+  PropulsionSystem.Records.RotationalMachineVariables flange_2_des(
     fixed=false,
     HideResult=false
   ) annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
-  discrete PropulsionSystem.Records.CompressorVariables variablesDes(
+  PropulsionSystem.Records.CompressorVariables variablesDes(
     fixed=false,
     HideResult=false
   ) annotation(
@@ -69,7 +69,7 @@ initial algorithm
   
 
 //******************************************************************************************
-initial equation
+equation
   /* ---------------------------------------------
     design point eqn
   --------------------------------------------- */
@@ -108,8 +108,8 @@ initial equation
   variablesDes.Nmech= NmechDes;
   variablesDes.omega= omega;
   variablesDes.trq= trq;
-  Wc_1_des= port_1.m_flow * sqrt(fluid_1.T / environment.Tstd) / (fluid_1.p / environment.pStd);
-  Nc_1_des= NmechDes / sqrt(fluid_1.T / environment.Tstd);
+  Wc_1_des= fluid_1_des.m_flow * sqrt(fluid_1_des.T / environment.Tstd) / (fluid_1_des.p / environment.pStd);
+  Nc_1_des= NmechDes / sqrt(fluid_1_des.T / environment.Tstd);
   //----------
   variablesDes.Nc_1= Nc_1;
   variablesDes.phi= phi;
@@ -120,7 +120,6 @@ initial equation
   
    
 //******************************************************************************************
-equation
   
   
 end CompressorBaseDefDesPt00;

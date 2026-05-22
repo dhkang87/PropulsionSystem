@@ -153,10 +153,8 @@ initial algorithm
 initial equation
   sizeTbl_Wc = size(combiTable2D_Wc.table);
   sizeTbl_eff = size(combiTable2D_eff.table);
-  /*
-  n_Wc = sizeTbl_Wc[0] * sizeTbl_Wc[1];
-  n_eff = sizeTbl_eff[0] * sizeTbl_eff[1];
-  */
+  n_Wc = sizeTbl_Wc[1] * sizeTbl_Wc[2];
+  n_eff = sizeTbl_eff[1] * sizeTbl_eff[2];
   
 equation
   connect(combiTable2D_Wc.y, y_Wc) annotation(
