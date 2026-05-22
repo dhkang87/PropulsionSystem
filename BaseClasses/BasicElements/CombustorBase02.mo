@@ -197,29 +197,29 @@ initial algorithm
     debug print, command window  
   --------------------------------------------- */
   if printCmd == true then
-    Modelica.Utilities.Streams.print("\n");
-    Modelica.Utilities.Streams.print("---initialization---" + "\n");
-    Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
-    Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
-    Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
-    Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
-    Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
-    Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
-    Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
+    // // Modelica.Utilities.Streams.print("\n");
+    // // Modelica.Utilities.Streams.print("---initialization---" + "\n");
+    // // Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
   end if;
 algorithm
   /* ---------------------------------------------
     debug print, command window   
   --------------------------------------------- */
   if printCmd == true then
-    Modelica.Utilities.Streams.print("\n");
-    Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
-    Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
-    Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
-    Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
-    Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
-    Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
-    Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
+    // // Modelica.Utilities.Streams.print("\n");
+    // // Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
+    // // Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
+    // // Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
   end if;
 equation
   connect(HeatInjector.port_2, port_2) annotation(
