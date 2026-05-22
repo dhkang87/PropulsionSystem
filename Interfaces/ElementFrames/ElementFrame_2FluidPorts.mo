@@ -125,11 +125,11 @@ protected
 initial algorithm
   //***** debug-print *****
   /*
-  Modelica.Utilities.Streams.print("\n");
-  Modelica.Utilities.Streams.print("At initialization"+"\n");
-  Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
-  Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
-  Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
+  // // Modelica.Utilities.Streams.print("\n");
+  // // Modelica.Utilities.Streams.print("At initialization"+"\n");
+  // // Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
+  // // Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
+  // // Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
   */
   
   
@@ -137,10 +137,10 @@ algorithm
   
   //***** debug-print *****
   /*
-  Modelica.Utilities.Streams.print("time= "+String(time)+" [s]"+"\n");
-  Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
-  Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
-  Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
+  // // Modelica.Utilities.Streams.print("time= "+String(time)+" [s]"+"\n");
+  // // Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
+  // // Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
+  // // Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
   */
   
   //***** give warning in case of innapropriate fluid states *****
