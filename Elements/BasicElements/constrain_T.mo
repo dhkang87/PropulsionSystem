@@ -12,7 +12,7 @@ model constrain_T
   //********** Type Definitions **********
   type switch_executeConstraint = enumeration(NotExecute "", Execute "");
   //********** Parameters **********
-  parameter Modelica.SIunits.Temperature Tdes = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature Tdes = 288.15 "" annotation(
     Dialog(group = "Characteristics"));
   //----- switches -----
   parameter PropulsionSystem.Types.switches.switch_parameter_input switchInput_T = PropulsionSystem.Types.switches.switch_parameter_input.use_desValue "" annotation(
@@ -26,7 +26,7 @@ model constrain_T
     Evaluate = true,
     HideResult = true);
   //********** Internal variables **********
-  Modelica.SIunits.Temperature T "";
+  Modelica.Units.SI.Temperature T "";
   //********** Interfaces **********
   Modelica.Blocks.Interfaces.RealInput T_in if switchInput_T == PropulsionSystem.Types.switches.switch_parameter_input.use_inputSignal "" annotation(
     Placement(visible = true, transformation(origin = {-80, -110}, extent = {{-10, -10}, {10, 10}}, rotation = 90), iconTransformation(origin = {-41, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));

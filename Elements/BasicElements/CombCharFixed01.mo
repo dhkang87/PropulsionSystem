@@ -46,7 +46,7 @@ model CombCharFixed01
   Dialog(group = "Component characteristics"));
   parameter Medium.ExtraProperty C_fuel_paramInput[Medium.nC](quantity = Medium.extraPropertiesNames) = fill(0, Medium.nC) "" annotation(
   Dialog(group = "Component characteristics")); 
-  parameter Modelica.SIunits.SpecificEnthalpy LHV_fuel_paramInput = 42.8 * 10.0 ^ 6.0 "lower heatting value of fuel, valid only when use_u_LHV_fuel==false" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy LHV_fuel_paramInput = 42.8 * 10.0 ^ 6.0 "lower heatting value of fuel, valid only when use_u_LHV_fuel==false" annotation(
     Dialog(group = "Component characteristics"));
   parameter Real effComb_paramInput = 0.99 "combustion efficiency, valid only when use_u_effComb==false" annotation(
     Dialog(group = "Component characteristics"));

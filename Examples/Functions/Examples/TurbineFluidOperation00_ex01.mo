@@ -3,7 +3,7 @@ within PropulsionSystem.Examples.Functions.Examples;
 model TurbineFluidOperation00_ex01
   extends Modelica.Icons.Example;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   package Medium = PropulsionSystem.Media.EngineBreathingAir.DryAirMethaneMixture00 annotation (
     choicesAllMatching=true);

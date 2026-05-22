@@ -19,53 +19,53 @@ partial model ElementFrame_3FluidPorts
   
   //********** Initialization Parameters **********
   //--- fluid_1, port_1 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow1_init(displayUnit="kg/s")= 1.0
+  parameter Modelica.Units.SI.MassFlowRate m_flow1_init(displayUnit="kg/s")= 1.0
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Pressure p1_init(displayUnit="Pa")= 101.3*1000
+  parameter Modelica.Units.SI.Pressure p1_init(displayUnit="Pa")= 101.3*1000
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature T1_init(displayUnit="K")= 288.15
+  parameter Modelica.Units.SI.Temperature T1_init(displayUnit="K")= 288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy h1_init(displayUnit="J/kg")= 1.004*1000*288.15
+  parameter Modelica.Units.SI.SpecificEnthalpy h1_init(displayUnit="J/kg")= 1.004*1000*288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
   //--- fluid_2, port_2 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow2_init(displayUnit="kg/s")= -1.0*m_flow1_init
+  parameter Modelica.Units.SI.MassFlowRate m_flow2_init(displayUnit="kg/s")= -1.0*m_flow1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Pressure p2_init(displayUnit="Pa")= 101.3*1000
+  parameter Modelica.Units.SI.Pressure p2_init(displayUnit="Pa")= 101.3*1000
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature T2_init(displayUnit="K")= 288.15
+  parameter Modelica.Units.SI.Temperature T2_init(displayUnit="K")= 288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.SpecificEnthalpy h2_init(displayUnit="J/kg")= 1.004*1000*288.15
+  parameter Modelica.Units.SI.SpecificEnthalpy h2_init(displayUnit="J/kg")= 1.004*1000*288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
   //--- fluid_3, port_3 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow3_init(displayUnit="kg/s")= -1.0*m_flow1_init
+  parameter Modelica.Units.SI.MassFlowRate m_flow3_init(displayUnit="kg/s")= -1.0*m_flow1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Pressure p3_init(displayUnit="Pa")= 101.3*1000
+  parameter Modelica.Units.SI.Pressure p3_init(displayUnit="Pa")= 101.3*1000
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature T3_init(displayUnit="K")= 288.15
+  parameter Modelica.Units.SI.Temperature T3_init(displayUnit="K")= 288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.SpecificEnthalpy h3_init(displayUnit="J/kg")= 1.004*1000*288.15
+  parameter Modelica.Units.SI.SpecificEnthalpy h3_init(displayUnit="J/kg")= 1.004*1000*288.15
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
@@ -136,11 +136,11 @@ algorithm
   
   //***** debug-print *****
   /*
-  print("\n");
-  print("time= "+String(time)+" [s]"+"\n");
-  print(String(getInstanceName()) +"\n");
-  print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
-  print("fluid_2.p= "+String(fluid_2.p) +"\n");
+  Modelica.Utilities.Streams.print("\n");
+  Modelica.Utilities.Streams.print("time= "+String(time)+" [s]"+"\n");
+  Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
+  Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
+  Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
   */
   
   

@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model CmpCharFixed01
-  extends PropulsionSystem.BaseClasses.BasicElements.CompressorBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.CompressorBaseDefDesPt00;
   /********************************************************
           imports   

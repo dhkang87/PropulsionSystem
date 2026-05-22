@@ -13,14 +13,14 @@ model PistonCylinderIdealOttoMV00
                   parameters
   --------------------------------------------- */
   parameter Real CR_paramInput = 12.0 "compression ratio";
-  parameter Modelica.SIunits.Volume VolDisp_paramInput = 100.0 * 10.0 ^ (-6.0) "displacement";
-  parameter Modelica.SIunits.SpecificEnthalpy LHV_fuel_paramInput = 43.4 * 10.0 ^ 6.0 "lower heating value of fuel";
+  parameter Modelica.Units.SI.Volume VolDisp_paramInput = 100.0 * 10.0 ^ (-6.0) "displacement";
+  parameter Modelica.Units.SI.SpecificEnthalpy LHV_fuel_paramInput = 43.4 * 10.0 ^ 6.0 "lower heating value of fuel";
   
   
   /* ---------------------------------------------
                   Internal variables
   --------------------------------------------- */
-  Modelica.SIunits.MassFlowRate m_flow_fuel "mass flow rate of fuel";
+  Modelica.Units.SI.MassFlowRate m_flow_fuel "mass flow rate of fuel";
   
   
   /* ---------------------------------------------

@@ -1,7 +1,7 @@
 within PropulsionSystem.Utilities;
 
 model ConstrainVariableUntilTimer
-  import Modelica.SIunits;
+  import Modelica.Units.SI;
   /* ---------------------------------------------
               parameters    
   --------------------------------------------- */

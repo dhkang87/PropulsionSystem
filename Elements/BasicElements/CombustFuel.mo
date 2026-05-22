@@ -15,9 +15,9 @@ model CombustFuel
     Documentation(info = "<html>
     </html>"));
   //********** Parameters **********
-  parameter Modelica.SIunits.MassFlowRate dm_fuel_des = 0.30 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate dm_fuel_des = 0.30 "" annotation(
     Dialog(group = "Boundary Condition"));
-  parameter Modelica.SIunits.SpecificEnthalpy LHV_fuel_des = 42.8 * 10.0 ^ 6.0 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy LHV_fuel_des = 42.8 * 10.0 ^ 6.0 "" annotation(
     Dialog(group = "Boundary Condition"));
   parameter Real effBurnDes = 0.9999 "" annotation(
     Dialog(group = "Characteristics"));
@@ -48,10 +48,10 @@ model CombustFuel
     Evaluate = true,
     HideResult = true);
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate dm_fuel(start = dm_fuel_des);
-  Modelica.SIunits.SpecificEnthalpy LHV_fuel(start = LHV_fuel_des);
+  Modelica.Units.SI.MassFlowRate dm_fuel(start = dm_fuel_des);
+  Modelica.Units.SI.SpecificEnthalpy LHV_fuel(start = LHV_fuel_des);
   Real effBurn(start = effBurnDes);
-  Modelica.SIunits.HeatFlowRate dq;
+  Modelica.Units.SI.HeatFlowRate dq;
   //********** Interfaces **********
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b HeatPort_b annotation(
     Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

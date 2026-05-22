@@ -3,7 +3,7 @@ within PropulsionSystem.Elements.BasicElements;
 model SimplestHeatPump00
   extends PropulsionSystem.BaseClasses.BasicElements.SimplestHeatPumpBase00;
   //----------
-  import units= Modelica.SIunits;
+  import units= Modelica.Units.SI;
   //----------
   parameter PropulsionSystem.Types.switches.switchHeatPumpCoP switchCoP= PropulsionSystem.Types.switches.switchHeatPumpCoP.CoP_c "";
   //----------

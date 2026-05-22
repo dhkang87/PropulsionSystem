@@ -19,9 +19,9 @@ partial model Turbine_Base
     Documentation(info = "<html>
     </html>"));
   //********** Parameters **********
-  parameter Modelica.SIunits.MassFlowRate WcDes_1_def = 10.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate WcDes_1_def = 10.0 "" annotation(
     Dialog(group = "Characteristics"));
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NcDes_1_def = 3000.0 "" annotation(
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm NcDes_1_def = 3000.0 "" annotation(
     Dialog(group = "Characteristics"));
   //----- inner-connected parameters -----
   inner parameter Real effDes = 0.80 "" annotation(
@@ -40,17 +40,17 @@ partial model Turbine_Base
     Evaluate = true,
     HideResult = true);
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate Wc_1(start = WcDes_1_def) "corrected mass flow rate";
+  Modelica.Units.SI.MassFlowRate Wc_1(start = WcDes_1_def) "corrected mass flow rate";
   Real PR(start=4.0) "pressure ratio";
   Real eff(start=0.8) "adiabatic efficiency";
-  Modelica.SIunits.SpecificEnthalpy dht_is "specific enthalpy change in isentropic compression";
-  Modelica.SIunits.SpecificEnthalpy dht "specific enthalpy change in non-isentropic compression";
-  Modelica.SIunits.SpecificEnthalpy h_2is "";
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nc_1(start = NcDes_1_def) "corrected rotation speed, rpm";
+  Modelica.Units.SI.SpecificEnthalpy dht_is "specific enthalpy change in isentropic compression";
+  Modelica.Units.SI.SpecificEnthalpy dht "specific enthalpy change in non-isentropic compression";
+  Modelica.Units.SI.SpecificEnthalpy h_2is "";
+  Modelica.Units.NonSI.AngularVelocity_rpm Nc_1(start = NcDes_1_def) "corrected rotation speed, rpm";
   //----- inner-connected variables -----
   inner Real NcqNcDes_1(start = 1.0) "";
-  inner Modelica.SIunits.MassFlowRate WcDes_1(start = WcDes_1_def) "corrected mass flow rate";
-  inner Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NcDes_1(start = NcDes_1_def);
+  inner Modelica.Units.SI.MassFlowRate WcDes_1(start = WcDes_1_def) "corrected mass flow rate";
+  inner Modelica.Units.NonSI.AngularVelocity_rpm NcDes_1(start = NcDes_1_def);
   //----- outer-connected variables -----
   //##### none #####
   //----- inner-outer-connected variables -----
@@ -99,7 +99,7 @@ equation
   pwr = -1.0 * (port_1.m_flow * fluid_1.h + port_2.m_flow * fluid_2.h);
   der(phi) = omega;
   omega * trq = pwr;
-  Nmech = Modelica.SIunits.Conversions.NonSIunits.to_rpm(omega);
+  Nmech = Modelica.Units.NonSI.to_rpm(omega);
   
   
 algorithm

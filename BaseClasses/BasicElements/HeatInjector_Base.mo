@@ -16,9 +16,9 @@ partial model HeatInjector_Base
     Documentation(info = "<html>
     </html>"));
   //********** Parameters **********
-  parameter Modelica.SIunits.Temperature TtOutletDes = 1800.0 "" annotation(
+  parameter Modelica.Units.SI.Temperature TtOutletDes = 1800.0 "" annotation(
     Dialog(group = "Characteristics"));
-  parameter Modelica.SIunits.HeatFlowRate dqInjectedDes = 1000.0 "" annotation(
+  parameter Modelica.Units.SI.HeatFlowRate dqInjectedDes = 1000.0 "" annotation(
     Dialog(group = "Characteristics"));
   //----- switches -----
   parameter switchCausality_HeatInjection switchCausality_dq = switchCausality_HeatInjection.input_TtOutlet "" annotation(
@@ -27,8 +27,8 @@ partial model HeatInjector_Base
     Evaluate = true,
     HideResult = true);
   //********** Internal variables **********
-  Modelica.SIunits.Temperature TtOutlet(start = TtOutletDes) "";
-  Modelica.SIunits.HeatFlowRate dqInjected "";
+  Modelica.Units.SI.Temperature TtOutlet(start = TtOutletDes) "";
+  Modelica.Units.SI.HeatFlowRate dqInjected "";
   //********** Interfaces **********
   //##### none #####
   //********** Initialization **********

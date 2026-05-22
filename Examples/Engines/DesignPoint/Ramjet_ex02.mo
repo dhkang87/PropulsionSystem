@@ -7,8 +7,8 @@ model Ramjet_ex02
   package engineAir = PropulsionSystem.Media.EngineBreathingAir.DryAirMethaneMixture00;
   //redeclare package Medium = engineAir
   //-----
-  Modelica.SIunits.SpecificEnthalpy arr_h[5];
-  Modelica.SIunits.SpecificEntropy arr_s[5];
+  Modelica.Units.SI.SpecificEnthalpy arr_h[5];
+  Modelica.Units.SI.SpecificEntropy arr_s[5];
   //-----
   inner PropulsionSystem.EngineSimEnvironment environment annotation(
     Placement(visible = true, transformation(origin = {-90, 90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

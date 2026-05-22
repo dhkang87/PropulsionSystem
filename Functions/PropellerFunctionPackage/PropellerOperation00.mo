@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.PropellerFunctionPackage;
 function PropellerOperation00
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   replaceable package inFuncMedium = Modelica.Media.Interfaces.PartialMedium(fixedX=false) annotation(
     choicesAllMatching = true);

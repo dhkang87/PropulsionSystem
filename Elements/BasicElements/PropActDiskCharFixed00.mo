@@ -35,15 +35,15 @@ model PropActDiskCharFixed00
   --------------------------------------------- */
   parameter Real effProp_paramInput = 0.9 "propeller efficiency, valid only when use_u_effProp==false, value fixed through simulation" annotation(
     Dialog(group = "characteristics"));
-  parameter Modelica.SIunits.Velocity Vinf_FnSaturation_paramInput=50 if(switch_FnSaturation==switchThrustSaturation.byVinf) "freestream speeed for thrust saturation, valid only when switch_FnSaturation==byVinf";
-  parameter Modelica.SIunits.Force Fn_FnSaturation_paramInput=10*1000 if(switch_FnSaturation==switchThrustSaturation.byFn) "saturation thrust, valid only when switch_FnSaturation==byFn";
+  parameter Modelica.Units.SI.Velocity Vinf_FnSaturation_paramInput=50 if(switch_FnSaturation==switchThrustSaturation.byVinf) "freestream speeed for thrust saturation, valid only when switch_FnSaturation==byVinf";
+  parameter Modelica.Units.SI.Force Fn_FnSaturation_paramInput=10*1000 if(switch_FnSaturation==switchThrustSaturation.byFn) "saturation thrust, valid only when switch_FnSaturation==byFn";
   
   
   /* ---------------------------------------------
         Internal variables    
     --------------------------------------------- */
-  Modelica.SIunits.Velocity Vinf_FnSaturation if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation";
-  Modelica.SIunits.Force Fn_FnSaturation if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust";
+  Modelica.Units.SI.Velocity Vinf_FnSaturation if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation";
+  Modelica.Units.SI.Force Fn_FnSaturation if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust";
   
   
   

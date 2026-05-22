@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.PropellerFunctionPackage;
 function CalcFnSaturation
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   input PropulsionSystem.Types.switches.switchPropellerThrustSaturation switchFnSaturation = PropulsionSystem.Types.switches.switchPropellerThrustSaturation.byVinf;
   input Units.Velocity Vinf;

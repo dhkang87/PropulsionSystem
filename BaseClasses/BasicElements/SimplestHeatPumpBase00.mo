@@ -1,7 +1,7 @@
 within PropulsionSystem.BaseClasses.BasicElements;
 
 partial model SimplestHeatPumpBase00
-  import units = Modelica.SIunits;
+  import units = Modelica.Units.SI;
   //----------
   units.HeatFlowRate QH_flow;
   units.HeatFlowRate QL_flow;

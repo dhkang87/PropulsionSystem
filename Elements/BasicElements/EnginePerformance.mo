@@ -14,11 +14,11 @@ model EnginePerformance
     HideResult = true,
     choices(checkBox = true), Dialog(group = "switch"));
   //********** Internal variables **********
-  Modelica.SIunits.Force Fg;
-  Modelica.SIunits.Force Fram;
-  Modelica.SIunits.Force FdScrub;
-  Modelica.SIunits.MassFlowRate m_flow_fuel;
-  Modelica.SIunits.Force Fn(start = 1.0);
+  Modelica.Units.SI.Force Fg;
+  Modelica.Units.SI.Force Fram;
+  Modelica.Units.SI.Force FdScrub;
+  Modelica.Units.SI.MassFlowRate m_flow_fuel;
+  Modelica.Units.SI.Force Fn(start = 1.0);
   Real TSFC "";
   Real TSFC_Bt "";
   //********** Interfaces **********

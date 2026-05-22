@@ -21,15 +21,15 @@ partial model MotorGeneratorBase00
   /* ---------------------------------------------
             Internal variables    
     --------------------------------------------- */
-  Modelica.SIunits.Power pwrIn "power extracted at flange_1/power supplied to motor";
-  Modelica.SIunits.Power pwrOut "real generated power/real power supplied to flange_1";
-  Modelica.SIunits.Power Qloss "heat generated due to loss";
-  Modelica.SIunits.Torque trqIn "torque extracted at flange_1/power supplied to motor";
-  Modelica.SIunits.Torque trqOut "torque by real generated power/real torque supplied to flange_1";
-  Modelica.SIunits.Power pwrOut_inv "real power, sign inverted";
-  Modelica.SIunits.Torque trqOut_inv "real torque, sign inverted";
-  Modelica.SIunits.AngularVelocity omega "mechanical rotation speed, rad/sec";
-  Modelica.SIunits.Angle phi "mechanical rotation displacement, rad";
+  Modelica.Units.SI.Power pwrIn "power extracted at flange_1/power supplied to motor";
+  Modelica.Units.SI.Power pwrOut "real generated power/real power supplied to flange_1";
+  Modelica.Units.SI.Power Qloss "heat generated due to loss";
+  Modelica.Units.SI.Torque trqIn "torque extracted at flange_1/power supplied to motor";
+  Modelica.Units.SI.Torque trqOut "torque by real generated power/real torque supplied to flange_1";
+  Modelica.Units.SI.Power pwrOut_inv "real power, sign inverted";
+  Modelica.Units.SI.Torque trqOut_inv "real torque, sign inverted";
+  Modelica.Units.SI.AngularVelocity omega "mechanical rotation speed, rad/sec";
+  Modelica.Units.SI.Angle phi "mechanical rotation displacement, rad";
   Real eff "efficiency";
   /* ---------------------------------------------
              Interface

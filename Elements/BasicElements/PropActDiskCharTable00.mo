@@ -38,7 +38,7 @@ model PropActDiskCharTable00
   /* ---------------------------------------------
           parameters    
     --------------------------------------------- */
-  parameter Modelica.SIunits.Length diam_paramInput=2.0 "propeller diameter" annotation(
+  parameter Modelica.Units.SI.Length diam_paramInput=2.0 "propeller diameter" annotation(
     Dialog(group = "component sizing"));
   
   

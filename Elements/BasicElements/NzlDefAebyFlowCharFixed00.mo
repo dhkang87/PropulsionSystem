@@ -1,10 +1,9 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model NzlDefAeByFlowCharFixed00
-  extends PropulsionSystem.BaseClasses.BasicElements.NozzleBase00(
+  extends PropulsionSystem.BaseClasses.BasicElements.NozzleBaseDefDesPt00(
     m_flow1_init=m_flow_1_des_paramInput
   );
-  extends PropulsionSystem.BaseClasses.BasicElements.NozzleBaseDefDesPt00;
   
   /********************************************************
               imports   
@@ -40,7 +39,7 @@ model NzlDefAeByFlowCharFixed00
     Dialog(group = "Characteristics"));
   parameter Real CvDes_paramInput = 0.99 "flow velocity coefficient, valid only when use_u_Cv==false, value fixed through simulation" annotation(
     Dialog(group = "Characteristics"));
-  parameter Modelica.SIunits.MassFlowRate m_flow_1_des_paramInput = 1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow_1_des_paramInput = 1.0 "" annotation(
     Dialog(group = "Component sizing"));
   
   /* ---------------------------------------------
@@ -90,31 +89,17 @@ initial equation
 algorithm
   
 //********************************************************************************
-equation
-  
-  when (time<=environment.timeRemoveDesConstraint)then
-    /* ---------------------------------------------
-    design point eqn
-    --------------------------------------------- */
+initial equation
     fluid_1_des.m_flow= m_flow_1_des_paramInput;
-    fluid_1_des.p= fluid_1.p;
-    fluid_1_des.T= fluid_1.T;
-    //--------------------
-    if use_u_CdTh == false then
-      CdThDes = CdThDes_paramInput;
-    elseif use_u_Cv == true then
-      CdThDes = u_CdTh;
-    end if;
-    //--------------------
-    if use_u_Cv == false then
-      CvDes = CvDes_paramInput;
-    elseif use_u_Cv == true then
-      CvDes = u_Cv;
-    end if;
-    //--------------------
-    AeThDes= AeTh;
-    AmechThDes= AmechTh;
-  end when;
+    fluid_1_des.p= p1_init;
+    fluid_1_des.T= T1_init;
+    CdThDes = CdThDes_paramInput;
+    CvDes = CvDes_paramInput;
+    AeThDes= AeTh_init;
+    AmechThDes= AmechTh_init;
+    
+//********************************************************************************
+equation
   
   
   /* ---------------------------------------------

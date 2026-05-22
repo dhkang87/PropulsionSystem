@@ -21,11 +21,11 @@ block arr_us_const_p_00
                 Internal variables
     --------------------------------------------- */
   Integer nPts;
-  Modelica.SIunits.SpecificEnergy arr_u[nPts_par];
-  Modelica.SIunits.SpecificEntropy arr_s[nPts_par];
-  Modelica.SIunits.SpecificEntropy ds;
-  Modelica.SIunits.SpecificEnergy uLower;
-  Modelica.SIunits.SpecificEnergy uUpper;
+  Modelica.Units.SI.SpecificEnergy arr_u[nPts_par];
+  Modelica.Units.SI.SpecificEntropy arr_s[nPts_par];
+  Modelica.Units.SI.SpecificEntropy ds;
+  Modelica.Units.SI.SpecificEnergy uLower;
+  Modelica.Units.SI.SpecificEnergy uUpper;
   /* ---------------------------------------------
                 Internal objects
     --------------------------------------------- */

@@ -61,7 +61,7 @@ model Compressor
     HideResult = true
     );
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate WcCalc_1(start= WcDes_1_def);
+  Modelica.Units.SI.MassFlowRate WcCalc_1(start= WcDes_1_def);
   //----- inner-connected variables -----
   //##### none #####
   //----- outer-connected variables -----

@@ -33,7 +33,7 @@ model MotorGeneratorCharFixed00
   parameter Real eff_paramInput=0.9 "motor/generator efficiency, valid only when use_u_eff==false, value fixed through simulation" annotation(
     Dialog(group = "Component characteristics"));
   
-  parameter Modelica.SIunits.Power pwr_paramInput=10*1000 "actual power extracted/ideal power supplied, valid only when use_u_pwr==false, value fixed through simulation" annotation(
+  parameter Modelica.Units.SI.Power pwr_paramInput=10*1000 "actual power extracted/ideal power supplied, valid only when use_u_pwr==false, value fixed through simulation" annotation(
     Dialog(group = "Component characteristics"));
   
   

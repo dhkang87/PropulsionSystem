@@ -48,45 +48,45 @@ model FlightCondition2InletFluid01
   /* ---------------------------------------------
                 parameters
       --------------------------------------------- */
-  parameter Modelica.SIunits.Length alt_paramInput = 10000.0 "flight altitude, valid only when use_u_alt==false, value fixed through simulation" annotation();
+  parameter Modelica.Units.SI.Length alt_paramInput = 10000.0 "flight altitude, valid only when use_u_alt==false, value fixed through simulation" annotation();
   parameter Real MN_paramInput = 0.80 "flight mach number, valid only when use_u_MN==false, value fixed through simulation" annotation();
-  parameter Modelica.SIunits.TemperatureDifference dTamb_paramInput = 0.0 "temperature diffrence from standard atmosphere, valid only when use_u_dTamb==false, value fixed through simulation" annotation();
+  parameter Modelica.Units.SI.TemperatureDifference dTamb_paramInput = 0.0 "temperature diffrence from standard atmosphere, valid only when use_u_dTamb==false, value fixed through simulation" annotation();
   parameter Medium.MassFraction X_fluid_paramInput[Medium.nX] = Medium.X_default "fluid composition, valid only when use_u_X==false, value fixed through simulation" annotation();
   parameter Medium.ExtraProperty C_fluid_paramInput[Medium.nC](quantity = Medium.extraPropertiesNames) = fill(0, Medium.nC) "fluid trace substance, valid only when use_u_C==false, value fixed through simulation" annotation();
   //********** Initialization Parameters **********
   //--- fluid2Inlet ---
-  parameter Modelica.SIunits.MassFlowRate m_flow2Inlet_init(displayUnit = "kg/s") = -1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow2Inlet_init(displayUnit = "kg/s") = -1.0 "" annotation(
     Dialog(tab = "Initialization", group = "fluid2Inlet"));
-  parameter Modelica.SIunits.Pressure p2Inlet_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p2Inlet_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid2Inlet"));
-  parameter Modelica.SIunits.Temperature T2Inlet_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T2Inlet_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid2Inlet"));
-  parameter Modelica.SIunits.SpecificEnthalpy h2Inlet_init(displayUnit = "J/kg") = T2Inlet_init * 1.004 * 1000 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h2Inlet_init(displayUnit = "J/kg") = T2Inlet_init * 1.004 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid2Inlet"));
   //--- fluidAmb ---
-  parameter Modelica.SIunits.MassFlowRate m_flowAmb_init(displayUnit = "kg/s") = -1.0 * m_flow2Inlet_init "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flowAmb_init(displayUnit = "kg/s") = -1.0 * m_flow2Inlet_init "" annotation(
     Dialog(tab = "Initialization", group = "fluidAmb"));
-  parameter Modelica.SIunits.Pressure pAmb_init(displayUnit = "Pa") = p2Inlet_init "" annotation(
+  parameter Modelica.Units.SI.Pressure pAmb_init(displayUnit = "Pa") = p2Inlet_init "" annotation(
     Dialog(tab = "Initialization", group = "fluidAmb"));
-  parameter Modelica.SIunits.Temperature Tamb_init(displayUnit = "K") = T2Inlet_init "" annotation(
+  parameter Modelica.Units.SI.Temperature Tamb_init(displayUnit = "K") = T2Inlet_init "" annotation(
     Dialog(tab = "Initialization", group = "fluidAmb"));
-  parameter Modelica.SIunits.SpecificEnthalpy hAmb_init(displayUnit = "J/kg") = Tamb_init * 1.004 * 1000 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy hAmb_init(displayUnit = "J/kg") = Tamb_init * 1.004 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluidAmb"));
   //--- others ---
-  parameter Modelica.SIunits.SpecificEntropy s_fluid_amb4source_init = 6800.0 "" annotation(
+  parameter Modelica.Units.SI.SpecificEntropy s_fluid_amb4source_init = 6800.0 "" annotation(
     Dialog(tab = "Initialization", group = "others"));
-  parameter Modelica.SIunits.SpecificEntropy s_fluid_amb4sink_init = 7000.0 "" annotation(
+  parameter Modelica.Units.SI.SpecificEntropy s_fluid_amb4sink_init = 7000.0 "" annotation(
     Dialog(tab = "Initialization", group = "others"));
-  parameter Modelica.SIunits.SpecificEntropy s_fluid_inlet_init = 7000.0 "" annotation(
+  parameter Modelica.Units.SI.SpecificEntropy s_fluid_inlet_init = 7000.0 "" annotation(
     Dialog(tab = "Initialization", group = "others"));
   /* ---------------------------------------------
         Internal variables
     --------------------------------------------- */
-  Modelica.SIunits.SpecificEntropy s_fluid_amb4source(start = s_fluid_amb4source_init) "specific entropy, fluid_1" annotation(
+  Modelica.Units.SI.SpecificEntropy s_fluid_amb4source(start = s_fluid_amb4source_init) "specific entropy, fluid_1" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.SpecificEntropy s_fluid_amb4sink(start = s_fluid_amb4sink_init) "specific entropy, fluid_1" annotation(
+  Modelica.Units.SI.SpecificEntropy s_fluid_amb4sink(start = s_fluid_amb4sink_init) "specific entropy, fluid_1" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.SpecificEntropy s_fluid_inlet(start = s_fluid_inlet_init) "specific entropy, fluid_2" annotation(
+  Modelica.Units.SI.SpecificEntropy s_fluid_inlet(start = s_fluid_inlet_init) "specific entropy, fluid_2" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   /* ---------------------------------------------
             Internal objects
@@ -119,13 +119,13 @@ model FlightCondition2InletFluid01
     Placement(visible = true, transformation(origin = {100, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   output Modelica.Blocks.Interfaces.RealOutput y_V_inf(quantity = "Velocity", unit = "m/s", displayUnit = "m/s") "[m/s], free stream velocity" annotation(
     Placement(visible = true, transformation(origin = {110, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter1(limitsAtInit = true, strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter1(strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {0, 58}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter2(limitsAtInit = true, strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter2(strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {-1, 28}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter3(limitsAtInit = true, strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter3(strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {25, -2}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter4(limitsAtInit = true, strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter4(strict = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {5, -11}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   Modelica.Fluid.Interfaces.FluidPort_b port_amb4source(redeclare package Medium = Medium, m_flow(start = m_flowAmb_init, min = if allowFlowReversal then -Constants.inf else 0.0), h_outflow(start = hAmb_init), p(start = pAmb_init)) "ambient port supposed to used as source" annotation(
     Placement(visible = true, transformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

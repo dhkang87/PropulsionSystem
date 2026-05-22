@@ -22,17 +22,17 @@ partial model LossRotationalMechanicsBase00
   /* ---------------------------------------------
             Internal variables    
     --------------------------------------------- */
-  Modelica.SIunits.Power pwrIn "power in";
-  Modelica.SIunits.Power pwrOut "power out";
-  Modelica.SIunits.Power Qloss "heat generated due to loss";
-  Modelica.SIunits.Torque trqIn "torque in";
-  Modelica.SIunits.Torque trqOut "torque out";
-  Modelica.SIunits.Torque trqMin;
-  Modelica.SIunits.Torque trqMax;
-  Modelica.SIunits.Power pwrOut_inv "power out, sign inverted";
-  Modelica.SIunits.Torque trqOut_inv "torque out, sign inverted";
-  Modelica.SIunits.AngularVelocity omega "mechanical rotation speed, rad/sec";
-  Modelica.SIunits.Angle phi "mechanical rotation displacement, rad";
+  Modelica.Units.SI.Power pwrIn "power in";
+  Modelica.Units.SI.Power pwrOut "power out";
+  Modelica.Units.SI.Power Qloss "heat generated due to loss";
+  Modelica.Units.SI.Torque trqIn "torque in";
+  Modelica.Units.SI.Torque trqOut "torque out";
+  Modelica.Units.SI.Torque trqMin;
+  Modelica.Units.SI.Torque trqMax;
+  Modelica.Units.SI.Power pwrOut_inv "power out, sign inverted";
+  Modelica.Units.SI.Torque trqOut_inv "torque out, sign inverted";
+  Modelica.Units.SI.AngularVelocity omega "mechanical rotation speed, rad/sec";
+  Modelica.Units.SI.Angle phi "mechanical rotation displacement, rad";
   Real eff "efficiency";
   
   

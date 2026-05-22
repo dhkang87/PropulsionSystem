@@ -20,7 +20,7 @@ model extractPwr
       use_Nmech_in ""
     );
   //********** Parameters **********
-  parameter Modelica.SIunits.Power pwrExtr_def= 1000.0
+  parameter Modelica.Units.SI.Power pwrExtr_def= 1000.0
     "power extracted via frange, des. pt, user defined"
     annotation(
     Dialog(group = "Characteristics"));
@@ -46,11 +46,11 @@ model extractPwr
     );
 
 //********** Internal variables **********
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nmech "mechanical rotation speed, rpm";
-  Modelica.SIunits.AngularVelocity omega "mechanical rotation speed, rad/sec";
-  Modelica.SIunits.Angle phi "mechanical rotation displacement, rad";
-  Modelica.SIunits.Torque trq "";
-  Modelica.SIunits.Power pwrExtr "power";
+  Modelica.Units.NonSI.AngularVelocity_rpm Nmech "mechanical rotation speed, rpm";
+  Modelica.Units.SI.AngularVelocity omega "mechanical rotation speed, rad/sec";
+  Modelica.Units.SI.Angle phi "mechanical rotation displacement, rad";
+  Modelica.Units.SI.Torque trq "";
+  Modelica.Units.SI.Power pwrExtr "power";
 
 //********** Interfaces **********
   Modelica.Mechanics.Rotational.Interfaces.Flange_a flange_a annotation(
@@ -77,7 +77,7 @@ equation
   flange_a.tau = trq;
 //********** Eqns describing physics **********
   der(phi) = omega;
-  Nmech = Modelica.SIunits.Conversions.NonSIunits.to_rpm(omega);
+  Nmech = Modelica.Units.NonSI.to_rpm(omega);
   
   /********************************************************
   Graphics

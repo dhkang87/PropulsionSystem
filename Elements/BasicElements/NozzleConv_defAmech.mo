@@ -14,7 +14,7 @@ model NozzleConv_defAmech
   //********** Type definitions, only valid in this class **********
   //##### none #####
   //********** Parameters **********
-  parameter Modelica.SIunits.Area Amech_th_def = 1.0 annotation(
+  parameter Modelica.Units.SI.Area Amech_th_def = 1.0 annotation(
     Dialog(group = "Geometry"));
   //----- switches -----
   parameter switches.switch_parameter_input switchInput_Amech_th

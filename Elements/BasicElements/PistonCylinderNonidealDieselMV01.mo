@@ -26,30 +26,30 @@ model PistonCylinderNonidealDieselMV01
                             parameters
         --------------------------------------------- */
   parameter Real CR_paramInput = 18.0 "compression ratio";
-  parameter Modelica.SIunits.Volume VolDisp_paramInput = 100.0 * 10.0 ^ (-6.0) "displacement";
-  parameter Modelica.SIunits.SpecificEnthalpy LHV_fuel_paramInput = 42.6 * 10.0 ^ 6.0 "lower heating value of fuel";
+  parameter Modelica.Units.SI.Volume VolDisp_paramInput = 100.0 * 10.0 ^ (-6.0) "displacement";
+  parameter Modelica.Units.SI.SpecificEnthalpy LHV_fuel_paramInput = 42.6 * 10.0 ^ 6.0 "lower heating value of fuel";
   /* ---------------------------------------------
                             Internal variables
         --------------------------------------------- */
-  Modelica.SIunits.MassFlowRate m_flow_fuel "mass flow rate of fuel" annotation(
+  Modelica.Units.SI.MassFlowRate m_flow_fuel "mass flow rate of fuel" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.SpecificEnthalpy dh_state4_port2 "enthalpy change by puming, state4 to port2" annotation(
+  Modelica.Units.SI.SpecificEnthalpy dh_state4_port2 "enthalpy change by puming, state4 to port2" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Power pwrPumping "power of pumping, positive== pwr into fluid, or loss for 'engine'" annotation(
+  Modelica.Units.SI.Power pwrPumping "power of pumping, positive== pwr into fluid, or loss for 'engine'" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Power pwrIntk "power of intake stroke, positive== pwr into fluid, or loss for 'engine'" annotation(
+  Modelica.Units.SI.Power pwrIntk "power of intake stroke, positive== pwr into fluid, or loss for 'engine'" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Power pwrExh "power of exhaust stroke, positive== pwr into fluid, or loss for 'engine'" annotation(
+  Modelica.Units.SI.Power pwrExh "power of exhaust stroke, positive== pwr into fluid, or loss for 'engine'" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Power pwrCycle "power by cycle, negative==pwr outof component" annotation(
+  Modelica.Units.SI.Power pwrCycle "power by cycle, negative==pwr outof component" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Power pwrFuelSply "LHV of fuel*m_flow_fuel" annotation(
+  Modelica.Units.SI.Power pwrFuelSply "LHV of fuel*m_flow_fuel" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Work WintkCycle "work of intake stroke, single cycle, positive== into fluid";
-  Modelica.SIunits.Work WexhCycle "work of exhaust stroke, single cycle, positive== into fluid";
+  Modelica.Units.SI.Work WintkCycle "work of intake stroke, single cycle, positive== into fluid";
+  Modelica.Units.SI.Work WexhCycle "work of exhaust stroke, single cycle, positive== into fluid";
   Real pwrPumpingqPwrCycle "pwrPumping / pwrCycle, positive==loss";
-  Modelica.SIunits.Pressure arr_p[8];
-  Modelica.SIunits.Volume arr_V[8];
+  Modelica.Units.SI.Pressure arr_p[8];
+  Modelica.Units.SI.Volume arr_V[8];
   /* ---------------------------------------------
                             Internal objects
     --------------------------------------------- */

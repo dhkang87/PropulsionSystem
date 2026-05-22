@@ -12,7 +12,7 @@ model constrain_dm
   //********** Type Definitions **********
   type switch_executeConstraint = enumeration(NotExecute "", Execute "");
   //********** Parameters **********
-  parameter Modelica.SIunits.MassFlowRate dmDes = 1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate dmDes = 1.0 "" annotation(
     Dialog(group = "Characteristics"));
   //----- switches -----
   parameter PropulsionSystem.Types.switches.switch_parameter_input switchInput_dm = PropulsionSystem.Types.switches.switch_parameter_input.use_desValue "" annotation(
@@ -26,7 +26,7 @@ model constrain_dm
     Evaluate = true,
     HideResult = true);
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate dm "";
+  Modelica.Units.SI.MassFlowRate dm "";
   //********** Interfaces **********
   Modelica.Blocks.Interfaces.RealInput dm_in if switchInput_dm == PropulsionSystem.Types.switches.switch_parameter_input.use_inputSignal "" annotation(
     Placement(visible = true, transformation(origin = {-80, -110}, extent = {{-10, -10}, {10, 10}}, rotation = 90), iconTransformation(origin = {-41, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));

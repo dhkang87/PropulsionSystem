@@ -20,7 +20,7 @@ model constrain_Nmech
       use_Nmech_in ""
     );
   //********** Parameters **********
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NmechDes= 3000.0
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm NmechDes= 3000.0
     "mechanical rotation speed at design point"
     annotation(
     Dialog(group = "Characteristics"));
@@ -45,9 +45,9 @@ model constrain_Nmech
     HideResult = true
     );
   //********** Internal variables **********
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nmech "mechanical rotation speed, rpm";
-  Modelica.SIunits.AngularVelocity omega "mechanical rotation speed, rad/sec";
-  Modelica.SIunits.Angle phi "mechanical rotation displacement, rad";
+  Modelica.Units.NonSI.AngularVelocity_rpm Nmech "mechanical rotation speed, rpm";
+  Modelica.Units.SI.AngularVelocity omega "mechanical rotation speed, rad/sec";
+  Modelica.Units.SI.Angle phi "mechanical rotation displacement, rad";
   //********** Interfaces **********
   Modelica.Mechanics.Rotational.Interfaces.Flange_a flange_a annotation(
     Placement(visible = true, transformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -78,7 +78,7 @@ equation
   end if;
   
   if (switchConstraint== switch_executeConstraint.Execute) then
-    Nmech = Modelica.SIunits.Conversions.NonSIunits.to_rpm(omega);
+    Nmech = Modelica.Units.NonSI.to_rpm(omega);
   end if;
   
   phi = flange_a.phi;

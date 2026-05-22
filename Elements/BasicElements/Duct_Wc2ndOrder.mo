@@ -14,7 +14,7 @@ model Duct_Wc2ndOrder
   inner parameter Real k_dPqP = 0.0001 "" annotation(
     Dialog(group = "Characteristics"));
   //********** Internal variables **********
-  inner Modelica.SIunits.MassFlowRate dm;
+  inner Modelica.Units.SI.MassFlowRate dm;
   //********** Internal model **********
   PropulsionSystem.Subelements.dPqP_Wc2ndOrder model_characteristics_1(redeclare package Medium = Medium) annotation(
     Placement(visible = true, transformation(origin = {-8, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

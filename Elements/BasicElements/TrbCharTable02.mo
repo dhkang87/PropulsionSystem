@@ -84,7 +84,7 @@ model TrbCharTable02
   );
   
   
-  Modelica.SIunits.MassFlowRate WcTblScld(start=10.0) "" annotation(
+  Modelica.Units.SI.MassFlowRate WcTblScld(start=10.0) "" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   Real PRtblScld(start=5.0) "" annotation(

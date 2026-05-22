@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model CmpCharTable01
-  extends PropulsionSystem.BaseClasses.BasicElements.CompressorBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.CompressorBaseDefDesPt00;
   
   
@@ -77,7 +76,7 @@ model CmpCharTable01
     Dialog(group = "Component characteristics"));
   inner parameter Real effDes_paramInput = 0.80 "adiabatic efficiency, valid only when use_u_eff==false, value fixed through simulation" annotation(
     Dialog(group = "Component characteristics"));
-  parameter Modelica.SIunits.Time timeRemoveDesConstraint = environment.timeRemoveDesConstraint annotation(
+  parameter Modelica.Units.SI.Time timeRemoveDesConstraint = environment.timeRemoveDesConstraint annotation(
     Dialog(group = "Simulation setting"));
   //----------
   parameter Real NcTblDes_paramInput = 1.0 "design point definition on characteristics table" annotation(
@@ -98,11 +97,7 @@ model CmpCharTable01
   /* ---------------------------------------------
                     Internal variables
         --------------------------------------------- */
-  discrete Real Rline(start=RlineTblDes_paramInput) "" annotation(
-    Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
-  );
-  
-  Boolean constrainDesPt(start=true) "" annotation(
+  Real Rline(start=RlineTblDes_paramInput) "" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
@@ -144,7 +139,7 @@ model CmpCharTable01
     Placement(visible = true, transformation(origin = {10, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Math.Division division_NcTbl annotation(
     Placement(visible = true, transformation(origin = {-20, 34}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter(limitsAtInit = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter(uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {-40, 31}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   /* ---------------------------------------------
               Interface   
@@ -154,9 +149,6 @@ initial algorithm
     
 //********************************************************************************
 initial equation
-  fluid_1_des.p=fluid_1.p;
-  fluid_1_des.T=fluid_1.T;
-  fluid_1_des.m_flow= port_1.m_flow;
   NmechDes=Nmech;
   
   //********************************************************************************
@@ -169,21 +161,6 @@ equation
   --------------------------------------------- */
   PRdes= PRdes_paramInput;
   effDes= effDes_paramInput;
-  
-  when (time<=environment.timeRemoveDesConstraint)then
-    fluid_1_des.m_flow= pre(fluid_1_des.m_flow);
-    fluid_1_des.p= pre(fluid_1_des.p);
-    fluid_1_des.T= pre(fluid_1_des.T);
-    NmechDes= pre(NmechDes);
-    //--------------------
-  end when;
-  
-  
-  if noEvent(time <= environment.timeRemoveDesConstraint) then
-    constrainDesPt=true;
-  else
-    constrainDesPt=false;
-  end if;
   
   
   if noEvent(time <= environment.timeRemoveDesConstraint) then

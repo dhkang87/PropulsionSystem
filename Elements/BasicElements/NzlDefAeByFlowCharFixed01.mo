@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model NzlDefAeByFlowCharFixed01
-  extends PropulsionSystem.BaseClasses.BasicElements.NozzleBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.NozzleBaseDefDesPt00;
   /********************************************************
         imports   

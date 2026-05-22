@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.PropellerFunctionPackage;
 function PropellerMechPower00
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   input Units.AngularVelocity omega;
   input Units.Torque trq;

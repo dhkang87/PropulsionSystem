@@ -7,7 +7,7 @@ model MixierLossBasedOnEntropy00
               imports
   ********************************************************/
   import Modelica.Constants;
-  import units= Modelica.SIunits;
+  import units= Modelica.Units.SI;
   
   
   /********************************************************

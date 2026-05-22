@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model TrbCharFixed00
-  extends PropulsionSystem.BaseClasses.BasicElements.TurbineBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.TurbineBaseDefDesPt00;
   
   /********************************************************

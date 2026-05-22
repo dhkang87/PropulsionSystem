@@ -8,8 +8,8 @@ protected
   ********************************************************/
   parameter PropulsionSystem.Records.ThermoFluidProperties fluid_1_des(fixed = false, HideResult = false, nX = Medium.nXi, nC = Medium.nC) annotation(HideResult=false);
   parameter PropulsionSystem.Records.ThermoFluidProperties fluid_2_des(fixed = false, HideResult = false, nX = Medium.nXi, nC = Medium.nC) annotation(HideResult=false);
-  parameter Modelica.SIunits.Area AeThDes(fixed=false) annotation(HideResult=false);
-  parameter Modelica.SIunits.Area AmechThDes(fixed=false) annotation(HideResult=false);
+  parameter Modelica.Units.SI.Area AeThDes(fixed=false) annotation(HideResult=false);
+  parameter Modelica.Units.SI.Area AmechThDes(fixed=false) annotation(HideResult=false);
   
 //******************************************************************************************
 initial algorithm

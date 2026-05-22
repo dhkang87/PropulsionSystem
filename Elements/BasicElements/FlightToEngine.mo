@@ -9,22 +9,22 @@ model FlightToEngine
   replaceable package Medium = Modelica.Media.Interfaces.PartialMedium annotation(
     choicesAllMatching = true);
   //********** Parameters **********
-  parameter Modelica.SIunits.Length alt = 0.0 "altitude" annotation(
+  parameter Modelica.Units.SI.Length alt = 0.0 "altitude" annotation(
     Evaluate = true,
     Dialog(enable = not use_alt_in));
   parameter Real MN = 0.0 "flight mach number" annotation(
     Evaluate = true,
     Dialog(enable = not use_MN_in));
-  parameter Modelica.SIunits.TemperatureDifference dTamb = 0.0 "deviation from std atmospheric temperature" annotation(
+  parameter Modelica.Units.SI.TemperatureDifference dTamb = 0.0 "deviation from std atmospheric temperature" annotation(
     Evaluate = true,
     Dialog(enable = not use_dTamb_in));
   parameter Real relHum = 0.0 "relative humidity" annotation(
     Evaluate = true,
     Dialog(enable = not use_dTamb_in));
-  parameter Modelica.SIunits.Angle AoA = 0.0 "" annotation(
+  parameter Modelica.Units.SI.Angle AoA = 0.0 "" annotation(
     Evaluate = true,
     Dialog(enable = not use_AOA_in));
-  parameter Modelica.SIunits.Angle sideSlip = 0.0 "" annotation(
+  parameter Modelica.Units.SI.Angle sideSlip = 0.0 "" annotation(
     Evaluate = true,
     Dialog(enable = not use_sideSlip_in));
   parameter Integer n_fluidAmb = 1 "" annotation(
@@ -65,35 +65,35 @@ model FlightToEngine
     HideResult = true);
   //********** Internal variables **********
   //***** constants *****
-  constant Modelica.SIunits.Acceleration gAccel = 9.81;
+  constant Modelica.Units.SI.Acceleration gAccel = 9.81;
   // gound
-  constant Modelica.SIunits.Length alt_ground = 0.0;
-  constant Modelica.SIunits.Temperature T_ground = 288.16;
-  constant Modelica.SIunits.AbsolutePressure p_ground = 101323.7;
+  constant Modelica.Units.SI.Length alt_ground = 0.0;
+  constant Modelica.Units.SI.Temperature T_ground = 288.16;
+  constant Modelica.Units.SI.AbsolutePressure p_ground = 101323.7;
   // upper bound of troposhere
-  constant Modelica.SIunits.Length alt_UpBdTropos = 11019.1;
-  constant Modelica.SIunits.Temperature T_UpBdTropos = 216.67;
-  constant Modelica.SIunits.AbsolutePressure p_UpBdTropos = 22632.9;
+  constant Modelica.Units.SI.Length alt_UpBdTropos = 11019.1;
+  constant Modelica.Units.SI.Temperature T_UpBdTropos = 216.67;
+  constant Modelica.Units.SI.AbsolutePressure p_UpBdTropos = 22632.9;
   constant Real LapseR1 = -0.0064878;
   // upper bound of stratosphere
-  constant Modelica.SIunits.Length alt_UpBdStratos = 25099.1;
-  constant Modelica.SIunits.Temperature T_UpBdStratos = 216.67;
-  constant Modelica.SIunits.AbsolutePressure p_UpBdStratos = 2486.4;
+  constant Modelica.Units.SI.Length alt_UpBdStratos = 25099.1;
+  constant Modelica.Units.SI.Temperature T_UpBdStratos = 216.67;
+  constant Modelica.Units.SI.AbsolutePressure p_UpBdStratos = 2486.4;
   constant Real LapseR2 = 0.0;
   //*****
   //
-  Modelica.SIunits.AbsolutePressure pAmb;
-  Modelica.SIunits.Temperature Tamb;
+  Modelica.Units.SI.AbsolutePressure pAmb;
+  Modelica.Units.SI.Temperature Tamb;
   Real Xamb[Medium.nX] = Medium.X_default;
-  Modelica.SIunits.AbsolutePressure pAmbStd;
-  Modelica.SIunits.Temperature TambStd;
+  Modelica.Units.SI.AbsolutePressure pAmbStd;
+  Modelica.Units.SI.Temperature TambStd;
   Real XambStd[Medium.nX] = Medium.X_default;
   // fluid stations
   Medium.BaseProperties fluid_tot "flow station, total";
   Medium.BaseProperties fluid_ambStd;
   Medium.BaseProperties fluid_amb;
-  Modelica.SIunits.Velocity V_tot(start = 100) "";
-  Modelica.SIunits.Force Fram "ram drag";
+  Modelica.Units.SI.Velocity V_tot(start = 100) "";
+  Modelica.Units.SI.Force Fram "ram drag";
   Modelica.Fluid.Sources.Boundary_pT fluid2Eng(redeclare package Medium = Medium, nPorts = 1, use_C_in = false, use_T_in = true, use_X_in = true, use_p_in = true) annotation(
     Placement(visible = true, transformation(origin = {80, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
   Modelica.Fluid.Sources.Boundary_pT fluidAmb(redeclare package Medium = Medium, nPorts = 1, use_C_in = false, use_T_in = true, use_X_in = true, use_p_in = true) annotation(

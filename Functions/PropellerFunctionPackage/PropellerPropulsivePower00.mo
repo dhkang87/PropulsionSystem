@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.PropellerFunctionPackage;
 function PropellerPropulsivePower00
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   input Units.Force Fn;
   input Units.Velocity Vinf;

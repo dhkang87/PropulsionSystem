@@ -1,7 +1,7 @@
 within PropulsionSystem.Utilities;
 
 model ConstrainVariableAfterTimer
-  import Modelica.SIunits;
+  import Modelica.Units.SI;
   /* ---------------------------------------------
                 parameters    
     --------------------------------------------- */

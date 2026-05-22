@@ -22,37 +22,37 @@ model AxCmpRotor_meanLine
   
   
   //********** Parameters **********
-  parameter Modelica.SIunits.Angle xi_def(displayUnit="deg")= 30.0*Modelica.Constants.pi/180
+  parameter Modelica.Units.SI.Angle xi_def(displayUnit="deg")= 30.0*Modelica.Constants.pi/180
     "angle of blade chord line"
     annotation(
     Dialog(group = "Geometry"));
     
-  parameter Modelica.SIunits.Length rTip_1_def= 2.0
+  parameter Modelica.Units.SI.Length rTip_1_def= 2.0
     "tip radius of blade, LE"
     annotation(
     Dialog(group = "Geometry"));
     
-  parameter Modelica.SIunits.Length rHub_1_def= 0.5
+  parameter Modelica.Units.SI.Length rHub_1_def= 0.5
     "tip radius of blade, LE"
     annotation(
     Dialog(group = "Geometry"));
   
-  parameter Modelica.SIunits.Length rTip_2_def= 2.0
+  parameter Modelica.Units.SI.Length rTip_2_def= 2.0
     "tip radius of blade, TE"
     annotation(
     Dialog(group = "Geometry"));
     
-  parameter Modelica.SIunits.Length rHub_2_def= 0.5
+  parameter Modelica.Units.SI.Length rHub_2_def= 0.5
     "tip radius of blade, TE"
     annotation(
     Dialog(group = "Geometry"));
   
-  parameter Modelica.SIunits.Length lAxial_def= 0.2
+  parameter Modelica.Units.SI.Length lAxial_def= 0.2
     "axial length of blade"
     annotation(
     Dialog(group = "Geometry"));
   
-  parameter Modelica.SIunits.Area Sblade_def= ((rTip_1_def-rHub_1_def) + (rTip_2_def-rHub_2_def))*lAxial_def*1/2
+  parameter Modelica.Units.SI.Area Sblade_def= ((rTip_1_def-rHub_1_def) + (rTip_2_def-rHub_2_def))*lAxial_def*1/2
     "surface area of single blade"
     annotation(
     Dialog(group = "Geometry"));
@@ -65,43 +65,43 @@ model AxCmpRotor_meanLine
   
   //********** Initialization Parameters **********
   //--- fluidStat_1 ---
-  parameter Modelica.SIunits.Pressure pStat_1_init(displayUnit="Pa")= p1_init "" annotation(
+  parameter Modelica.Units.SI.Pressure pStat_1_init(displayUnit="Pa")= p1_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_1"));
-  parameter Modelica.SIunits.Temperature TStat_1_init(displayUnit="K")= T1_init "" annotation(
+  parameter Modelica.Units.SI.Temperature TStat_1_init(displayUnit="K")= T1_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy hStat_1_init(displayUnit="J/kg")= h1_init "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy hStat_1_init(displayUnit="J/kg")= h1_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_1"));
   
   //--- fluidStat_2 ---
-  parameter Modelica.SIunits.Pressure pStat_2_init(displayUnit="Pa")= p2_init "" annotation(
+  parameter Modelica.Units.SI.Pressure pStat_2_init(displayUnit="Pa")= p2_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_2"));
-  parameter Modelica.SIunits.Temperature TStat_2_init(displayUnit="K")= T2_init "" annotation(
+  parameter Modelica.Units.SI.Temperature TStat_2_init(displayUnit="K")= T2_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_2"));
-  parameter Modelica.SIunits.SpecificEnthalpy hStat_2_init(displayUnit="J/kg")= h2_init "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy hStat_2_init(displayUnit="J/kg")= h2_init "" annotation(
     Dialog(tab="Initialization", group="fluidStat_2"));
   
   
   //********** Internal variables **********
-  Modelica.SIunits.Length rMean "mean radius of blade";
-  Modelica.SIunits.Length rTip_1 "tip radius, LE";
-  Modelica.SIunits.Length rHub_1 "hub radius, LE";
-  Modelica.SIunits.Length rTip_2 "tip radius, TE";
-  Modelica.SIunits.Length rHub_2 "hub radius, TE";
-  Modelica.SIunits.Length lAxial "axial length of blade";
-  Modelica.SIunits.Length height_1 "blade height, LE";
-  Modelica.SIunits.Length height_2 "blade height, TE";
-  Modelica.SIunits.Length hBlade "blade height, avg";
-  Modelica.SIunits.Area Sblade "surface area of single blade";
+  Modelica.Units.SI.Length rMean "mean radius of blade";
+  Modelica.Units.SI.Length rTip_1 "tip radius, LE";
+  Modelica.Units.SI.Length rHub_1 "hub radius, LE";
+  Modelica.Units.SI.Length rTip_2 "tip radius, TE";
+  Modelica.Units.SI.Length rHub_2 "hub radius, TE";
+  Modelica.Units.SI.Length lAxial "axial length of blade";
+  Modelica.Units.SI.Length height_1 "blade height, LE";
+  Modelica.Units.SI.Length height_2 "blade height, TE";
+  Modelica.Units.SI.Length hBlade "blade height, avg";
+  Modelica.Units.SI.Area Sblade "surface area of single blade";
   
   Real AR "aspect ratio";
   Real BR_1 "boss ratio, leading";
   Real BR_2 "boss ratio, trailing edge";
   Real numBlade "num. of blades";
   
-  Modelica.SIunits.Area AeffAx_1 "mech. area, flow cross section, axial, LE";
-  Modelica.SIunits.Area AeffAbs_1 "mech. area, flow cross section, abs, LE";
-  Modelica.SIunits.Area AeffAx_2 "mech. area, flow cross section, axial, TE";
-  Modelica.SIunits.Area AeffAbs_2 "mech. area, flow cross section, abs, TE";
+  Modelica.Units.SI.Area AeffAx_1 "mech. area, flow cross section, axial, LE";
+  Modelica.Units.SI.Area AeffAbs_1 "mech. area, flow cross section, abs, LE";
+  Modelica.Units.SI.Area AeffAx_2 "mech. area, flow cross section, axial, TE";
+  Modelica.Units.SI.Area AeffAbs_2 "mech. area, flow cross section, abs, TE";
   
   Real MnAx_1 "mach, axial, LE";
   Real MnAbs_1 "mach, absolute, LE";
@@ -111,52 +111,52 @@ model AxCmpRotor_meanLine
   Real MnAbs_2 "mach, absolute, TE";
   Real MnRel_2 "mach, relative, TE";
   
-  Modelica.SIunits.Velocity c1 "abs-V, LE";
-  Modelica.SIunits.Velocity cx1 "axial-V, LE";
-  Modelica.SIunits.Velocity cTheta1 "tangential component, abs-V, LE";
-  Modelica.SIunits.Velocity w1 "rel-V, LE";
-  Modelica.SIunits.Velocity wTheta1 "tangential component, rel-V, LE";
+  Modelica.Units.SI.Velocity c1 "abs-V, LE";
+  Modelica.Units.SI.Velocity cx1 "axial-V, LE";
+  Modelica.Units.SI.Velocity cTheta1 "tangential component, abs-V, LE";
+  Modelica.Units.SI.Velocity w1 "rel-V, LE";
+  Modelica.Units.SI.Velocity wTheta1 "tangential component, rel-V, LE";
   
-  Modelica.SIunits.Velocity c2 "abs-V, TE";
-  Modelica.SIunits.Velocity cx2 "axial-V, TE";
-  Modelica.SIunits.Velocity cTheta2 "tangential component, abs-V, TE";
-  Modelica.SIunits.Velocity w2 "rel-V, TE";
-  Modelica.SIunits.Velocity wTheta2 "tangential component, rel-V, TE";
+  Modelica.Units.SI.Velocity c2 "abs-V, TE";
+  Modelica.Units.SI.Velocity cx2 "axial-V, TE";
+  Modelica.Units.SI.Velocity cTheta2 "tangential component, abs-V, TE";
+  Modelica.Units.SI.Velocity w2 "rel-V, TE";
+  Modelica.Units.SI.Velocity wTheta2 "tangential component, rel-V, TE";
   
-  Modelica.SIunits.Velocity Umean "tangential velocity, mean r";
-  Modelica.SIunits.Velocity Vsound_1 "sound speed, LE";
-  Modelica.SIunits.Velocity Vsound_2 "sound speed, TE";
+  Modelica.Units.SI.Velocity Umean "tangential velocity, mean r";
+  Modelica.Units.SI.Velocity Vsound_1 "sound speed, LE";
+  Modelica.Units.SI.Velocity Vsound_2 "sound speed, TE";
     
-  Modelica.SIunits.Angle alpha1 "flow angle, abs, LE";
-  Modelica.SIunits.Angle beta1 "flow angle, rel, LE";
-  Modelica.SIunits.Angle phi1 "angle btwn rel-V and disk plane, LE";
-  Modelica.SIunits.Angle inci1 "incident angle(AoA for airfoil), LE";
+  Modelica.Units.SI.Angle alpha1 "flow angle, abs, LE";
+  Modelica.Units.SI.Angle beta1 "flow angle, rel, LE";
+  Modelica.Units.SI.Angle phi1 "angle btwn rel-V and disk plane, LE";
+  Modelica.Units.SI.Angle inci1 "incident angle(AoA for airfoil), LE";
   
-  Modelica.SIunits.Angle alpha2 "flow angle, abs, TE";
-  Modelica.SIunits.Angle beta2 "flow angle, rel, TE";
-  Modelica.SIunits.Angle phi2 "angle btwn rel-V and disk plane, TE";
+  Modelica.Units.SI.Angle alpha2 "flow angle, abs, TE";
+  Modelica.Units.SI.Angle beta2 "flow angle, rel, TE";
+  Modelica.Units.SI.Angle phi2 "angle btwn rel-V and disk plane, TE";
   
-  Modelica.SIunits.Angle xi "angle of blade chord line";
-  Modelica.SIunits.Angle epsiron2 "downwash angle, TE";
+  Modelica.Units.SI.Angle xi "angle of blade chord line";
+  Modelica.Units.SI.Angle epsiron2 "downwash angle, TE";
   
-  Modelica.SIunits.MassFlowRate m_flow_single "m_flow, single blade";
+  Modelica.Units.SI.MassFlowRate m_flow_single "m_flow, single blade";
   
   Real CL "lift coefficient";
   Real CD "drag coefficient";
   
-  Modelica.SIunits.Force FthetaSingle "aero-force, tangential direction, single blade";
-  Modelica.SIunits.Force FaxSingle "aero-force, axial direction, single blade";
-  Modelica.SIunits.Force FliftSingle "lift, single blade";
-  Modelica.SIunits.Force FdragSingle "drag, single blade";
+  Modelica.Units.SI.Force FthetaSingle "aero-force, tangential direction, single blade";
+  Modelica.Units.SI.Force FaxSingle "aero-force, axial direction, single blade";
+  Modelica.Units.SI.Force FliftSingle "lift, single blade";
+  Modelica.Units.SI.Force FdragSingle "drag, single blade";
   
-  Modelica.SIunits.Force Ftheta "aero-force, tangential direction, total of blades";
-  Modelica.SIunits.Force Fax "aero-force, axial direction, total of blades";
-  Modelica.SIunits.Force Flift "lift, total of blades";
-  Modelica.SIunits.Force Fdrag "drag, total of blades";
+  Modelica.Units.SI.Force Ftheta "aero-force, tangential direction, total of blades";
+  Modelica.Units.SI.Force Fax "aero-force, axial direction, total of blades";
+  Modelica.Units.SI.Force Flift "lift, total of blades";
+  Modelica.Units.SI.Force Fdrag "drag, total of blades";
   
-  Modelica.SIunits.Torque trqSingle "torque, by single blade";
-  Modelica.SIunits.Power pwrSingle "power, by single blade";
-  Modelica.SIunits.SpecificEnthalpy dht "rise in specific enthalpy across rotor";
+  Modelica.Units.SI.Torque trqSingle "torque, by single blade";
+  Modelica.Units.SI.Power pwrSingle "power, by single blade";
+  Modelica.Units.SI.SpecificEnthalpy dht "rise in specific enthalpy across rotor";
   
   Medium.BaseProperties fluidStat_1
   (
@@ -305,7 +305,7 @@ equation
   pwr= -1.0*((port_1.m_flow * fluid_1.h) + (port_2.m_flow * fluid_2.h));
   der(phi)= omega;
   omega*trq= pwr;
-  Nmech= Modelica.SIunits.Conversions.NonSIunits.to_rpm(omega);
+  Nmech= Modelica.Units.NonSI.to_rpm(omega);
   
   
 annotation(

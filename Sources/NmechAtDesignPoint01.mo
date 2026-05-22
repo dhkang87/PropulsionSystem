@@ -24,36 +24,36 @@ model NmechAtDesignPoint01
   /* ---------------------------------------------
           parameters
   --------------------------------------------- */
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NmechDes_paramInput = 3000.0 "mechanical rotation speed, rpm";
-  parameter Modelica.SIunits.Angle deltaPhi=0 "Fixed rotation of left flange with respect to right flange (= flange_b.phi - flange_a.phi)";
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm NmechDes_paramInput = 3000.0 "mechanical rotation speed, rpm";
+  parameter Modelica.Units.SI.Angle deltaPhi=0 "Fixed rotation of left flange with respect to right flange (= flange_b.phi - flange_a.phi)";
   //********** Initialization Parameters **********
   //--- flange_1 ---
-  parameter Modelica.SIunits.Torque tau1_init = -1.0 * tau2_init "" annotation(
+  parameter Modelica.Units.SI.Torque tau1_init = -1.0 * tau2_init "" annotation(
     Dialog(tab = "Initialization", group = "flange_1"));
-  parameter Modelica.SIunits.Angle phi1_init = phi_init "" annotation(
+  parameter Modelica.Units.SI.Angle phi1_init = phi_init "" annotation(
     Dialog(tab = "Initialization", group = "flange_1"));
   //--- flange_2 ---
-  parameter Modelica.SIunits.Torque tau2_init = pwr_init / (Nmech_init * 2.0 * Modelica.Constants.pi / 60.0) "" annotation(
+  parameter Modelica.Units.SI.Torque tau2_init = pwr_init / (Nmech_init * 2.0 * Modelica.Constants.pi / 60.0) "" annotation(
     Dialog(tab = "Initialization", group = "flange_2"));
-  parameter Modelica.SIunits.Angle phi2_init = phi_init "" annotation(
+  parameter Modelica.Units.SI.Angle phi2_init = phi_init "" annotation(
     Dialog(tab = "Initialization", group = "flange_2"));
   //--- others ---
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nmech_init = NmechDes_paramInput "" annotation(
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm Nmech_init = NmechDes_paramInput "" annotation(
     Dialog(tab = "Initialization", group = "others"));
-  parameter Modelica.SIunits.Angle phi_init = 0.0 "" annotation(
+  parameter Modelica.Units.SI.Angle phi_init = 0.0 "" annotation(
     Dialog(tab = "Initialization", group = "others"));
-  parameter Modelica.SIunits.Power pwr_init = 5.0 * 10.0 ^ 5 "" annotation(
+  parameter Modelica.Units.SI.Power pwr_init = 5.0 * 10.0 ^ 5 "" annotation(
     Dialog(tab = "Initialization", group = "others"));
   
   /* ---------------------------------------------
         Internal variables
   --------------------------------------------- */
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nmech(start = Nmech_init) "mechanical rotation speed, rpm" annotation(
+  Modelica.Units.NonSI.AngularVelocity_rpm Nmech(start = Nmech_init) "mechanical rotation speed, rpm" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   
-  Modelica.SIunits.AngularVelocity omega(start = Nmech_init * 2.0 * Modelica.Constants.pi / 60.0) "mechanical rotation speed, rad/sec" annotation(
+  Modelica.Units.SI.AngularVelocity omega(start = Nmech_init * 2.0 * Modelica.Constants.pi / 60.0) "mechanical rotation speed, rad/sec" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
-  Modelica.SIunits.Angle phi(start = phi_init) "mechanical rotation displacement, rad" annotation(
+  Modelica.Units.SI.Angle phi(start = phi_init) "mechanical rotation displacement, rad" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   discrete Real auxVar[2];
   
@@ -76,7 +76,7 @@ model NmechAtDesignPoint01
   //********************************************************************************
 
 protected
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NmechDes(fixed=false) "mechanical rotation speed, design point value, rpm" annotation(HideResult=false);
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm NmechDes(fixed=false) "mechanical rotation speed, design point value, rpm" annotation(HideResult=false);
   //********************************************************************************
 initial equation
   if printCmd == true then

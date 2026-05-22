@@ -21,11 +21,11 @@ block arr_pVol_const_s_00
                   Internal variables
       --------------------------------------------- */
   Integer nPts;
-  Modelica.SIunits.Pressure arr_p[nPts_par];
-  Modelica.SIunits.Volume arr_V[nPts_par];
-  Modelica.SIunits.Pressure dp;
-  Modelica.SIunits.Volume Vupper;
-  Modelica.SIunits.Volume Vlower;
+  Modelica.Units.SI.Pressure arr_p[nPts_par];
+  Modelica.Units.SI.Volume arr_V[nPts_par];
+  Modelica.Units.SI.Pressure dp;
+  Modelica.Units.SI.Volume Vupper;
+  Modelica.Units.SI.Volume Vlower;
   /* ---------------------------------------------
                   Internal objects
       --------------------------------------------- */

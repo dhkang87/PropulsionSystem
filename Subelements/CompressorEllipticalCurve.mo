@@ -44,8 +44,8 @@ model CompressorEllipticalCurve
   //-----
   Real NcqNcDes "";
   Real thetaCurve(min= 0.0, max=Constants.pi/2.0 ) "";
-  Modelica.SIunits.MassFlowRate WcCurve "";
-  Modelica.SIunits.MassFlowRate WcCurveDes "";
+  Modelica.Units.SI.MassFlowRate WcCurve "";
+  Modelica.Units.SI.MassFlowRate WcCurveDes "";
   Real PRcurve "";
   Real PRcurveDes "";
   Real effCurve "";
@@ -59,7 +59,7 @@ model CompressorEllipticalCurve
   Real s_PR "";
   Real s_eff "";
   //-----
-  Modelica.SIunits.MassFlowRate Wc_internal "";
+  Modelica.Units.SI.MassFlowRate Wc_internal "";
   Real PR_internal "";
   Real eff_internal "";
   //----- outer-connected variables -----
@@ -67,10 +67,10 @@ model CompressorEllipticalCurve
   outer switches.switch_defineDesValue switchDef_s_PR_CurveDes "";
   outer switches.switch_defineDesValue switchDef_s_eff_CurveDes "";
   
-  outer Modelica.SIunits.MassFlowRate WcDes_1 "";
+  outer Modelica.Units.SI.MassFlowRate WcDes_1 "";
   outer Real PRdes "";
   outer Real effDes "";
-  outer Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NcDes_1;
+  outer Modelica.Units.NonSI.AngularVelocity_rpm NcDes_1;
   //---
   outer Real NcqNcDes_1 "";
   //---

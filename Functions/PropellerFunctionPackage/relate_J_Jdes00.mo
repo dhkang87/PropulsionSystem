@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.PropellerFunctionPackage;
 function relate_J_Jdes00
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   input Real t;
   input Real tSwitch;

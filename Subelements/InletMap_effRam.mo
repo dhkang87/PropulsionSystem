@@ -20,8 +20,8 @@ model InletMap_effRam
   outer parameter Modelica.Blocks.Types.Smoothness switchSmoothness "";
   //---
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate WcCurve "";
-  Modelica.SIunits.MassFlowRate WcCurveDes "";
+  Modelica.Units.SI.MassFlowRate WcCurve "";
+  Modelica.Units.SI.MassFlowRate WcCurveDes "";
   Real effRamCurve "";
   Real effRamCurveDes "";
   //-----
@@ -37,7 +37,7 @@ model InletMap_effRam
   outer switches.switch_defineDesValue switchDef_s_Wc_CurveDes "";
   outer switches.switch_defineDesValue switchDef_s_effRam_CurveDes "";
   outer Real MnFltDes "";
-  outer Modelica.SIunits.MassFlowRate WcDes_1 "";
+  outer Modelica.Units.SI.MassFlowRate WcDes_1 "";
   outer Real effRamDes "";
   //---
   outer Real s_Wc_CurveDes_in "";

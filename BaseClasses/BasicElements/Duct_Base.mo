@@ -24,7 +24,7 @@ model Duct_Base
   //##### none #####
   //********** Internal variables **********
   Real dPqP(start = 0.001);
-  Modelica.SIunits.PressureDifference dP;
+  Modelica.Units.SI.PressureDifference dP;
   //********** Internal model **********
   //##### none #####
   //********** Interfaces **********

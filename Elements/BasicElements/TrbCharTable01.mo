@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model TrbCharTable01
-  extends PropulsionSystem.BaseClasses.BasicElements.TurbineBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.TurbineBaseDefDesPt00;
   
   /********************************************************
@@ -59,7 +58,7 @@ model TrbCharTable01
       --------------------------------------------- */
   inner parameter Real effDes_paramInput = 0.80 "adiabatic efficiency, valid only when use_u_eff==false, value fixed through simulation" annotation(
     Dialog(group = "Component characteristics"));
-  parameter Modelica.SIunits.Time timeRemoveDesConstraint = environment.timeRemoveDesConstraint annotation(
+  parameter Modelica.Units.SI.Time timeRemoveDesConstraint = environment.timeRemoveDesConstraint annotation(
     Dialog(group = "Simulation setting"));
   //----------
   parameter Real NcTblDes_paramInput = 1.0 "design point definition on characteristics table" annotation(
@@ -79,11 +78,7 @@ model TrbCharTable01
   /* ---------------------------------------------
                     Internal variables
   --------------------------------------------- */
-  Boolean constrainDesPt(start=true) "" annotation(
-    Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
-  );
-  
-  
+
   /* ---------------------------------------------
                 Internal objects
   --------------------------------------------- */
@@ -125,9 +120,9 @@ model TrbCharTable01
     Placement(visible = true, transformation(origin = {-55, 15}, extent = {{-5, -5}, {5, 5}}, rotation = 90)));
   Modelica.Blocks.Math.Add add_PRtbl annotation(
     Placement(visible = true, transformation(origin = {0, 26}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  Modelica.Blocks.Nonlinear.Limiter limiter(limitsAtInit = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter(uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {-40, 45}, extent = {{-5, -5}, {5, 5}}, rotation = -90)));
-  Modelica.Blocks.Nonlinear.Limiter limiter1(limitsAtInit = true, uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
+  Modelica.Blocks.Nonlinear.Limiter limiter1(uMax = Modelica.Constants.inf, uMin = 1.0e-10) annotation(
     Placement(visible = true, transformation(origin = {-20, 51}, extent = {{-5, -5}, {5, 5}}, rotation = -90)));
   
   
@@ -137,11 +132,7 @@ initial algorithm
   
   //********************************************************************************
 initial equation
-  fluid_1_des.m_flow=port_1.m_flow;
-  fluid_1_des.p = fluid_1.p;
-  fluid_1_des.T = fluid_1.T;
   NmechDes=Nmech;
-  
   PRdes=PR;
   
   //********************************************************************************
@@ -154,25 +145,6 @@ equation
   design point constraint
   --------------------------------------------- */
   effDes=effDes_paramInput;
-  
-  when (time<=environment.timeRemoveDesConstraint)then
-    /* ---------------------------------------------
-    design point calc
-    --------------------------------------------- */
-    NmechDes=pre(NmechDes);
-    //--------------------
-    fluid_1_des.m_flow= pre(fluid_1_des.m_flow);
-    fluid_1_des.p= pre(fluid_1_des.p);
-    fluid_1_des.T= pre(fluid_1_des.T);
-    PRdes=pre(PRdes);
-  end when;
-  
-  if noEvent(time <= environment.timeRemoveDesConstraint) then
-    constrainDesPt=true;
-  else
-    constrainDesPt=false;
-  end if;
-  
   
   if noEvent(time <= environment.timeRemoveDesConstraint) then
     //----- design-point calc -----

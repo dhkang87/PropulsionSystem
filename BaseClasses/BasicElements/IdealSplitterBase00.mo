@@ -30,31 +30,31 @@ partial model IdealSplitterBase00
   --------------------------------------------- */
   //********** Initialization Parameters **********
   //--- fluid_1, port_1 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow1_init(displayUnit = "kg/s") = 1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow1_init(displayUnit = "kg/s") = 1.0 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
   //--- fluid_2, port_2 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 *(1.0-0.5)* m_flow1_init "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 *(1.0-0.5)* m_flow1_init "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
   //--- fluid_3, port_3 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow3_init(displayUnit = "kg/s") = -1.0 *(0.5)* m_flow1_init "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow3_init(displayUnit = "kg/s") = -1.0 *(0.5)* m_flow1_init "" annotation(
     Dialog(tab = "Initialization", group = "fluid_3"));
-  parameter Modelica.SIunits.Pressure p3_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p3_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_3"));
-  parameter Modelica.SIunits.Temperature T3_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T3_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_3"));
-  parameter Modelica.SIunits.SpecificEnthalpy h3_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h3_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_3"));
   
   
@@ -99,18 +99,18 @@ initial algorithm
     debug print, command window  
   --------------------------------------------- */
   if printCmd == true then
-    print("\n");
-    print("---initialization---" + "\n");
-    print("instance:" + getInstanceName() + "\n");
-    print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
-    print("port_1.p= " + String(port_1.p) + "\n");
-    print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
-    print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
-    print("port_2.p= " + String(port_2.p) + "\n");
-    print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
-    print("port_3.m_flow= " + String(port_3.m_flow) + "\n");
-    print("port_3.p= " + String(port_3.p) + "\n");
-    print("port_3.h_outflow= " + String(port_3.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("\n");
+    Modelica.Utilities.Streams.print("---initialization---" + "\n");
+    Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
+    Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
+    Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
+    Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("port_3.m_flow= " + String(port_3.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_3.p= " + String(port_3.p) + "\n");
+    Modelica.Utilities.Streams.print("port_3.h_outflow= " + String(port_3.h_outflow) + "\n");
   end if;
   
   //********************************************************************************
@@ -120,17 +120,17 @@ algorithm
     debug print, command window   
   --------------------------------------------- */
   if printCmd == true then
-    print("\n");
-    print("instance:" + getInstanceName() + "\n");
-    print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
-    print("port_1.p= " + String(port_1.p) + "\n");
-    print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
-    print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
-    print("port_2.p= " + String(port_2.p) + "\n");
-    print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
-    print("port_3.m_flow= " + String(port_3.m_flow) + "\n");
-    print("port_3.p= " + String(port_3.p) + "\n");
-    print("port_3.h_outflow= " + String(port_3.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("\n");
+    Modelica.Utilities.Streams.print("instance:" + getInstanceName() + "\n");
+    Modelica.Utilities.Streams.print("port_1.m_flow= " + String(port_1.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_1.p= " + String(port_1.p) + "\n");
+    Modelica.Utilities.Streams.print("port_1.h_outflow= " + String(port_1.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("port_2.m_flow= " + String(port_2.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_2.p= " + String(port_2.p) + "\n");
+    Modelica.Utilities.Streams.print("port_2.h_outflow= " + String(port_2.h_outflow) + "\n");
+    Modelica.Utilities.Streams.print("port_3.m_flow= " + String(port_3.m_flow) + "\n");
+    Modelica.Utilities.Streams.print("port_3.p= " + String(port_3.p) + "\n");
+    Modelica.Utilities.Streams.print("port_3.h_outflow= " + String(port_3.h_outflow) + "\n");
   end if;
   
   //********************************************************************************

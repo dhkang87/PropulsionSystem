@@ -24,32 +24,32 @@ model MassFlowAtDesignPoint01
   /* ---------------------------------------------
                 parameters
     --------------------------------------------- */
-  parameter Modelica.SIunits.MassFlowRate m_flow_des_paramInput = 10.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow_des_paramInput = 10.0 "" annotation(
     Dialog(group = "Component characteristics"));
   //********** Initialization Parameters **********
   //--- fluid_1, port_1 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow1_init(displayUnit = "kg/s") = m_flow_des_paramInput "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow1_init(displayUnit = "kg/s") = m_flow_des_paramInput "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
   //--- fluid_2, port_2 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 * m_flow1_init "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 * m_flow1_init "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
   
   /* ---------------------------------------------
       Internal variables
   --------------------------------------------- */
-  Modelica.SIunits.MassFlowRate m_flow(start = m_flow1_init) "" annotation(
+  Modelica.Units.SI.MassFlowRate m_flow(start = m_flow1_init) "" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   
   discrete Real auxVar[2];
@@ -81,7 +81,7 @@ model MassFlowAtDesignPoint01
   
   //****************************************************************************************************
 protected
-  parameter Modelica.SIunits.MassFlowRate m_flow_des(fixed=false) "mass flow rate, design point value" annotation(HideResult=false);
+  parameter Modelica.Units.SI.MassFlowRate m_flow_des(fixed=false) "mass flow rate, design point value" annotation(HideResult=false);
   
   //****************************************************************************************************
 initial equation

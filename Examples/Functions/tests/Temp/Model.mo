@@ -5,8 +5,8 @@ model Model
      choicesAllMatching = true);
   function funMach = FunctionPackage.Mach(redeclare package funMedium = myMedium);
   Real Mach;
-  parameter Modelica.SIunits.Temperature T = 293.15;
-  parameter Modelica.SIunits.Pressure p = 101325;
+  parameter Modelica.Units.SI.Temperature T = 293.15;
+  parameter Modelica.Units.SI.Pressure p = 101325;
 protected
   Real TempTime = T + time;
 equation

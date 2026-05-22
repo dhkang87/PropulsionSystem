@@ -317,7 +317,7 @@ initial equation
   /* ---------------------------------------------
     determine design point
   --------------------------------------------- */
-  AeThDes= AmechTh*CdThDes;
+  PRdes = PR;
 //----------
 algorithm
   if(printCmd==true)then
@@ -438,13 +438,6 @@ equation
   elseif (switch_defineFg == switchDefineFg.ThroatFlowAndPressure) then
     Fg = Cv*V_th*m_flow_th + (fluidStat_th.p - fluid_2.p) * AeTh;
   end if;
-  when time <= environment.timeRemoveDesConstraint then
-/* ---------------------------------------------
-    design point eqn
-    --------------------------------------------- */
-    PRdes = PR;
-//----------
-  end when;
 /********************************************************
   Graphics
 ********************************************************/

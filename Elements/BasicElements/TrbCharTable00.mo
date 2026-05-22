@@ -1,14 +1,13 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model TrbCharTable00
-  extends PropulsionSystem.BaseClasses.BasicElements.TurbineBase00(
+  extends PropulsionSystem.BaseClasses.BasicElements.TurbineBaseDefDesPt00(
     m_flow1_init=m_flow_1_des_paramInput,
     p1_init=p1_des_paramInput,
     T1_init=T1_des_paramInput,
     Nmech_init=NmechDes_paramInput,
     eff_init=effDes_paramInput
   );
-  extends PropulsionSystem.BaseClasses.BasicElements.TurbineBaseDefDesPt00;
   
   /********************************************************
             imports   
@@ -237,11 +236,6 @@ equation
   fluid_1_des.T=T1_des_paramInput;
   NmechDes = NmechDes_paramInput;
   effDes= effDes_paramInput;
-  
-  when (time<=environment.timeRemoveDesConstraint)then
-    //----------
-    PRdes= pre(PRdes);
-  end when;
   
   //----------
   ScalerDesTrb.u_NcTblDes = NcTblDes_paramInput;

@@ -125,10 +125,10 @@ protected
   //********************************************************************************
 initial algorithm
   if printCmd == true then
-    print("----- msg at initialization -----" + "\n");
-    print("     instance: " + String(getInstanceName()) + "\n");
-    print("file read by this component= " + fullPathName_tableFile_used + "\n");
-    print("----- end msg at initialization, " + String(getInstanceName()) + " -----" + "\n");
+    Modelica.Utilities.Streams.print("----- msg at initialization -----" + "\n");
+    Modelica.Utilities.Streams.print("     instance: " + String(getInstanceName()) + "\n");
+    Modelica.Utilities.Streams.print("file read by this component= " + fullPathName_tableFile_used + "\n");
+    Modelica.Utilities.Streams.print("----- end msg at initialization, " + String(getInstanceName()) + " -----" + "\n");
   end if;
 initial equation
   sizeTbl_CT = size(combiTable2D_CT.table);

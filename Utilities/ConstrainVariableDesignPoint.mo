@@ -1,7 +1,7 @@
 within PropulsionSystem.Utilities;
 
 model ConstrainVariableDesignPoint
-  import Modelica.SIunits;
+  import Modelica.Units.SI;
   /* ---------------------------------------------
         Internal variables
     --------------------------------------------- */

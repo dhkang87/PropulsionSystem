@@ -3,7 +3,7 @@ within PropulsionSystem.Examples.Functions.tests;
 model TurbineFluidOperation00_ex01
   extends Modelica.Icons.Example;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   replaceable package Medium = Modelica.Media.Air.DryAirNasa constrainedby Modelica.Media.Interfaces.PartialMedium annotation (
     choicesAllMatching=true);

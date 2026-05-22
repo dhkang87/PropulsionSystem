@@ -17,32 +17,32 @@ partial model ElementFrame_1FluidPort_2ShaftPorts
     Evaluate = true);
   //----- inner-connected parameters -----
   //-----
-  inner parameter Modelica.SIunits.MassFlowRate dmDes_1 = 10.0 "design point dm at st.1, refered in subelement" annotation(
+  inner parameter Modelica.Units.SI.MassFlowRate dmDes_1 = 10.0 "design point dm at st.1, refered in subelement" annotation(
     Dialog(group = "Design Point Definition"));
-  inner parameter Modelica.SIunits.AbsolutePressure pDes_1(displayUnit = "Pa") = 101.3 * 1000 "design point p at st.1, refered in subelement" annotation(
+  inner parameter Modelica.Units.SI.AbsolutePressure pDes_1(displayUnit = "Pa") = 101.3 * 1000 "design point p at st.1, refered in subelement" annotation(
     Dialog(group = "Design Point Definition"));
-  inner parameter Modelica.SIunits.Temperature Tdes_1 = 288.15 "design point T at st.1, refered in subelement" annotation(
+  inner parameter Modelica.Units.SI.Temperature Tdes_1 = 288.15 "design point T at st.1, refered in subelement" annotation(
     Dialog(group = "Design Point Definition"));
-  inner parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NmechDes = 3000.0 "" annotation(
+  inner parameter Modelica.Units.NonSI.AngularVelocity_rpm NmechDes = 3000.0 "" annotation(
     Dialog(group = "Characteristics"));
   //********** Initialization Parameters **********
   //--- fluid_1, port_1 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow1_init(displayUnit = "kg/s") = 1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow1_init(displayUnit = "kg/s") = 1.0 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
   
   //********** Internal variables **********
   Medium.BaseProperties fluid_1(p.start = p1_init, T.start = T1_init, state.p.start = p1_init, state.T.start = T1_init, h.start = h1_init) "flow station of inlet";
-  Modelica.SIunits.Power pwr "power via shaft, positive if fluid generates power";
-  Modelica.SIunits.Torque trq(start = 1.0) "trq via shaft";
-  Modelica.SIunits.AngularVelocity omega(start = 1.0) "mechanical rotation speed, rad/sec";
-  Modelica.SIunits.Angle phi(start = 0.0) "mechanical rotation displacement, rad";
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nmech(start = NmechDes) "mechanical rotation speed, rpm";
+  Modelica.Units.SI.Power pwr "power via shaft, positive if fluid generates power";
+  Modelica.Units.SI.Torque trq(start = 1.0) "trq via shaft";
+  Modelica.Units.SI.AngularVelocity omega(start = 1.0) "mechanical rotation speed, rad/sec";
+  Modelica.Units.SI.Angle phi(start = 0.0) "mechanical rotation displacement, rad";
+  Modelica.Units.NonSI.AngularVelocity_rpm Nmech(start = NmechDes) "mechanical rotation speed, rpm";
   Real NqNdes(start = 1.0) "ratio of mech. rotational speed with respect to design pt. speed";
   //----- inner-connected variables -----
   //##### none #####
@@ -68,19 +68,19 @@ protected
 initial algorithm
 //***** debug-print *****
 /*
-  print("\n");
-  print("At initialization"+"\n");
-  print(String(getInstanceName()) +"\n");
-  print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
-  print("fluid_2.p= "+String(fluid_2.p) +"\n");
+  Modelica.Utilities.Streams.print("\n");
+  Modelica.Utilities.Streams.print("At initialization"+"\n");
+  Modelica.Utilities.Streams.print(String(getInstanceName()) +"\n");
+  Modelica.Utilities.Streams.print("fluid_1.state.p= "+String(fluid_1.state.p) +"\n");
+  Modelica.Utilities.Streams.print("fluid_2.p= "+String(fluid_2.p) +"\n");
   */
 algorithm
 //***** debug-print *****
 /*
-  print("time= " + String(time) + " [s]" + "\n");
-  print(String(getInstanceName()) + "\n");
-  print("fluid_1.state.p= " + String(fluid_1.state.p) + "\n");
-  print("fluid_2.p= " + String(fluid_2.p) + "\n");
+  Modelica.Utilities.Streams.print("time= " + String(time) + " [s]" + "\n");
+  Modelica.Utilities.Streams.print(String(getInstanceName()) + "\n");
+  Modelica.Utilities.Streams.print("fluid_1.state.p= " + String(fluid_1.state.p) + "\n");
+  Modelica.Utilities.Streams.print("fluid_2.p= " + String(fluid_2.p) + "\n");
   */
   assert(fluid_1.p < 0.0, getInstanceName() + ", fluid_1.p got less than 0", AssertionLevel.warning);
   assert(fluid_1.T < 0.0, getInstanceName() + ", fluid_1.T got less than 0", AssertionLevel.warning);

@@ -31,39 +31,39 @@ model MassFlowAtInit
   --------------------------------------------- */
   //********** Initialization Parameters **********
   //--- fluid_1, port_1 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow1_init(displayUnit = "kg/s") = m_flow_init_paramInput "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow1_init(displayUnit = "kg/s") = m_flow_init_paramInput "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p1_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T1_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h1_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
   //--- fluid_2, port_2 ---
-  parameter Modelica.SIunits.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 * m_flow1_init "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow2_init(displayUnit = "kg/s") = -1.0 * m_flow1_init "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure p2_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature T2_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
-  parameter Modelica.SIunits.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h2_init(displayUnit = "J/kg") = 1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_2"));
   
   
-  parameter Modelica.SIunits.MassFlowRate m_flow_init_paramInput=1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow_init_paramInput=1.0 "" annotation(
     Dialog(group = "Component characteristics"));
   
-  parameter Modelica.SIunits.Time timeRemoveDesConstraint=environment.timeRemoveDesConstraint "" annotation(
+  parameter Modelica.Units.SI.Time timeRemoveDesConstraint=environment.timeRemoveDesConstraint "" annotation(
     Dialog(group = "Simulation setting"));
   
   
   /* ---------------------------------------------
       Internal variables
   --------------------------------------------- */
-  Modelica.SIunits.MassFlowRate m_flow_max(start=m_flow1_init) "" annotation(
+  Modelica.Units.SI.MassFlowRate m_flow_max(start=m_flow1_init) "" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
-  Modelica.SIunits.MassFlowRate m_flow_min(start=m_flow2_init) "" annotation(
+  Modelica.Units.SI.MassFlowRate m_flow_min(start=m_flow2_init) "" annotation(
     Dialog(tab="Variables", group="start attribute" ,enable=false, showStartAttribute=true)
   );
   
@@ -139,15 +139,12 @@ equation
   m_flow_max = max(port_1.m_flow, port_2.m_flow);
   m_flow_min= min(port_1.m_flow, port_2.m_flow);
   
-  if(m_flow_max == port_1.m_flow)then
+  if(port_1.m_flow >= port_2.m_flow)then
     port_1.h_outflow= fluid_1.h;
     port_1.Xi_outflow= fluid_1.Xi;
-  elseif(m_flow_max == port_2.m_flow)then
+  else
     port_2.h_outflow= fluid_2.h;
     port_2.Xi_outflow= fluid_2.Xi;
-  else
-    port_1.h_outflow= fluid_1.h;
-    port_1.Xi_outflow= fluid_1.Xi;
   end if;
 /* ---------------------------------------------
   Eqns describing physics

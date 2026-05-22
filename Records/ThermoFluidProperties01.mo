@@ -9,19 +9,19 @@ record ThermoFluidProperties01
   parameter Integer nX;
   parameter Integer nC;
   
-  parameter Modelica.SIunits.MassFlowRate m_flow(fixed=fixed) annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flow(fixed=fixed) annotation(
     HideResult=false);
-  parameter Modelica.SIunits.Pressure p(fixed=fixed) annotation(
+  parameter Modelica.Units.SI.Pressure p(fixed=fixed) annotation(
     HideResult=false);
-  parameter Modelica.SIunits.Temperature T(fixed=fixed) annotation(
+  parameter Modelica.Units.SI.Temperature T(fixed=fixed) annotation(
     HideResult=false);
-  parameter Modelica.SIunits.SpecificEnthalpy h(fixed=fixed) annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy h(fixed=fixed) annotation(
     HideResult=false);
-  parameter Modelica.SIunits.MassFraction X[nX](each fixed=fixed) annotation(
+  parameter Modelica.Units.SI.MassFraction X[nX](each fixed=fixed) annotation(
     HideResult=false);
   parameter Real C[nC](each fixed=fixed) annotation(
     HideResult=false);
-  parameter Modelica.SIunits.SpecificEntropy s(fixed=fixed) annotation(
+  parameter Modelica.Units.SI.SpecificEntropy s(fixed=fixed) annotation(
     HideResult=false);
   
 end ThermoFluidProperties01;

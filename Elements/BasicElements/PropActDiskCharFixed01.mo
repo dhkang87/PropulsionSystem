@@ -55,33 +55,33 @@ model PropActDiskCharFixed01
   parameter Real Jdes_paramInput= 2.0 "advance ratio, design point, higher -> smaller diameter" annotation(
     Dialog(group = "characteristics"));
   
-  parameter Modelica.SIunits.Velocity Vinf_FnSaturation_paramInput = 50 if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation, valid only when switch_FnSaturation==byVinf";
-  parameter Modelica.SIunits.Force Fn_FnSaturation_paramInput = 10 * 1000 if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust, valid only when switch_FnSaturation==byFn";
+  parameter Modelica.Units.SI.Velocity Vinf_FnSaturation_paramInput = 50 if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation, valid only when switch_FnSaturation==byVinf";
+  parameter Modelica.Units.SI.Force Fn_FnSaturation_paramInput = 10 * 1000 if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust, valid only when switch_FnSaturation==byFn";
   
   //********** Initialization Parameters **********
   //--- fluid_Amb, port_Amb ---
-  parameter Modelica.SIunits.MassFlowRate m_flowAmb_init(displayUnit = "kg/s") = 1.0 "" annotation(
+  parameter Modelica.Units.SI.MassFlowRate m_flowAmb_init(displayUnit = "kg/s") = 1.0 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_amb"));
-  parameter Modelica.SIunits.Pressure pAmb_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
+  parameter Modelica.Units.SI.Pressure pAmb_init(displayUnit = "Pa") = 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_amb"));
-  parameter Modelica.SIunits.Temperature Tamb_init(displayUnit = "K") = 288.15 "" annotation(
+  parameter Modelica.Units.SI.Temperature Tamb_init(displayUnit = "K") = 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_amb"));
-  parameter Modelica.SIunits.SpecificEnthalpy hAmb_init(displayUnit = "J/kg") = Tamb_init*1.004 * 1000 * 288.15 "" annotation(
+  parameter Modelica.Units.SI.SpecificEnthalpy hAmb_init(displayUnit = "J/kg") = Tamb_init*1.004 * 1000 * 288.15 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_amb"));
   
   
   /* ---------------------------------------------
           Internal variables    
   --------------------------------------------- */
-  Modelica.SIunits.Velocity Vinf_FnSaturation if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation";
-  Modelica.SIunits.Force Fn_FnSaturation if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust";
+  Modelica.Units.SI.Velocity Vinf_FnSaturation if switch_FnSaturation == switchThrustSaturation.byVinf "freestream speeed for thrust saturation";
+  Modelica.Units.SI.Force Fn_FnSaturation if switch_FnSaturation == switchThrustSaturation.byFn "saturation thrust";
   
   Real CT(start=0.12, min=Modelica.Constants.small) "thrust coefficient" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   Real CP(start=0.32, min=Modelica.Constants.small) "power coefficient" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   /**/
-  Modelica.SIunits.Length diam(start=4.0, min=Modelica.Constants.small) "propeller diameter" annotation(
+  Modelica.Units.SI.Length diam(start=4.0, min=Modelica.Constants.small) "propeller diameter" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
   Real J(start=1.4, min=Modelica.Constants.small) "advance ratio" annotation(
     Dialog(tab = "Variables", group = "start attribute", enable = false, showStartAttribute = true));
@@ -129,7 +129,7 @@ protected
   /* ---------------------------------------------
     Non-modifiable parameters
   --------------------------------------------- */
-  parameter Modelica.SIunits.Length diamDes(fixed=false, start=2.0) "propeller diameter" annotation(
+  parameter Modelica.Units.SI.Length diamDes(fixed=false, start=2.0) "propeller diameter" annotation(
     HideResult=false);
   parameter Real CTdes(fixed=false, start=0.1) "design point thrust coefficient" annotation(
     HideResult=false);

@@ -1,7 +1,6 @@
 within PropulsionSystem.Elements.BasicElements;
 
 model NzlCharFixed00
-  extends PropulsionSystem.BaseClasses.BasicElements.NozzleBase00;
   extends PropulsionSystem.BaseClasses.BasicElements.NozzleBaseDefDesPt00;
   
   /********************************************************
@@ -40,7 +39,7 @@ model NzlCharFixed00
     Dialog(group = "Characteristics"));
   parameter Real CvDes_paramInput = 0.99 "flow velocity coefficient, valid only when use_u_Cv==false, value fixed through simulation" annotation(
     Dialog(group = "Characteristics"));
-  parameter Modelica.SIunits.Area AmechTh_paramInput= 0.0014 "Throat mechanical area, valid only when switchDetermine_AmechTh==param, value fixed through simulation" annotation(
+  parameter Modelica.Units.SI.Area AmechTh_paramInput= 0.0014 "Throat mechanical area, valid only when switchDetermine_AmechTh==param, value fixed through simulation" annotation(
     Dialog(group = "Geometry"));
   
   

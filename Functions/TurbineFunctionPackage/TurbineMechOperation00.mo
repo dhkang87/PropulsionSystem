@@ -3,7 +3,7 @@ within PropulsionSystem.Functions.TurbineFunctionPackage;
 function TurbineMechOperation00
   extends Modelica.Icons.Function;
   //****************************************
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   //****************************************
   input Units.AngularVelocity omega;
   input Units.Torque trq;

@@ -13,10 +13,10 @@ function EvaluateChoke
   //********** declare outputs **********
   output ThermodynamicState stateStat_O;
   output Real MN_O;
-  Modelica.SIunits.Velocity V_O;
+  Modelica.Units.SI.Velocity V_O;
 protected
   //********** declare local objects **********
-  Modelica.SIunits.SpecificEnthalpy hStat_O "";
+  Modelica.Units.SI.SpecificEnthalpy hStat_O "";
   
 algorithm
   //********** process **********

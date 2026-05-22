@@ -35,8 +35,8 @@ partial model Inlet_Base
     HideResult = true);
   //********** Internal variables **********
   Real effRam(start = 0.995);
-  Modelica.SIunits.Force Fram "ram drag";
-  Modelica.SIunits.Velocity V_tot(start = 100) "";
+  Modelica.Units.SI.Force Fram "ram drag";
+  Modelica.Units.SI.Velocity V_tot(start = 100) "";
   //********** Interfaces **********
   Modelica.Blocks.Interfaces.RealInput V_tot_in 
     if(switchCalcFram == switch_calculate_Fram.calculate)

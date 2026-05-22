@@ -21,12 +21,12 @@ partial model Compressor_Base
   
   
   //********** Parameters **********
-  parameter Modelica.SIunits.MassFlowRate WcDes_1_def=10.0
+  parameter Modelica.Units.SI.MassFlowRate WcDes_1_def=10.0
     ""
     annotation(
     Dialog(group = "Characteristics"));
   
-  parameter Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NcDes_1_def= 3000.0
+  parameter Modelica.Units.NonSI.AngularVelocity_rpm NcDes_1_def= 3000.0
     ""
     annotation(
     Dialog(group = "Characteristics"));
@@ -53,17 +53,17 @@ partial model Compressor_Base
   
   
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate Wc_1(start= WcDes_1_def) "corrected mass flow rate";
+  Modelica.Units.SI.MassFlowRate Wc_1(start= WcDes_1_def) "corrected mass flow rate";
   Real PR(start = PRdes) "pressure ratio";
   Real eff(start = effDes) "adiabatic efficiency";
-  Modelica.SIunits.SpecificEnthalpy dht_is "specific enthalpy change in isentropic compression";
-  Modelica.SIunits.SpecificEnthalpy dht "specific enthalpy change in non-isentropic compression";
-  Modelica.SIunits.SpecificEnthalpy h_2is "";
-  Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm Nc_1(start= NcDes_1_def) "corrected rotation speed, rpm";
+  Modelica.Units.SI.SpecificEnthalpy dht_is "specific enthalpy change in isentropic compression";
+  Modelica.Units.SI.SpecificEnthalpy dht "specific enthalpy change in non-isentropic compression";
+  Modelica.Units.SI.SpecificEnthalpy h_2is "";
+  Modelica.Units.NonSI.AngularVelocity_rpm Nc_1(start= NcDes_1_def) "corrected rotation speed, rpm";
   //----- inner-connected variables -----
   inner Real NcqNcDes_1(start=1.0) "";
-  inner Modelica.SIunits.MassFlowRate WcDes_1(start= WcDes_1_def) "corrected mass flow rate";
-  inner Modelica.SIunits.Conversions.NonSIunits.AngularVelocity_rpm NcDes_1(start=NcDes_1_def);
+  inner Modelica.Units.SI.MassFlowRate WcDes_1(start= WcDes_1_def) "corrected mass flow rate";
+  inner Modelica.Units.NonSI.AngularVelocity_rpm NcDes_1(start=NcDes_1_def);
   //----- inner-outer-connected variables -----
   inner outer PropulsionSystem.EngineSimEnvironment environment "System wide properties";
   
@@ -112,7 +112,7 @@ equation
   pwr= -1.0*((port_1.m_flow * fluid_1.h) + (port_2.m_flow * fluid_2.h));
   der(phi)= omega;
   omega*trq= pwr;
-  Nmech= Modelica.SIunits.Conversions.NonSIunits.to_rpm(omega);
+  Nmech= Modelica.Units.NonSI.to_rpm(omega);
   
   
 /********************************************************

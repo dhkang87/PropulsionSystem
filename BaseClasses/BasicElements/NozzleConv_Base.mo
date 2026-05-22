@@ -51,19 +51,19 @@ partial model NozzleConv_Base
   )
     "flow station of outlet, total";
     
-  Modelica.SIunits.Velocity V_2(start = 10);
-  Modelica.SIunits.Velocity V_2is(start = 10);
+  Modelica.Units.SI.Velocity V_2(start = 10);
+  Modelica.Units.SI.Velocity V_2is(start = 10);
   Real PR(start = 2.0);
   Real CdTh(start = CdThDes);
   Real Cv(start = CvDes);
-  Modelica.SIunits.SpecificEnthalpy h_2is "";
-  Modelica.SIunits.Force Fg "";
+  Modelica.Units.SI.SpecificEnthalpy h_2is "";
+  Modelica.Units.SI.Force Fg "";
   //-----
   //-throat-
-  Modelica.SIunits.MassFlowRate dmTh(start=0.0);
-  Modelica.SIunits.Area Amech_th;
-  Modelica.SIunits.Area AeTh;
-  Modelica.SIunits.Velocity V_th(start= 0.0);
+  Modelica.Units.SI.MassFlowRate dmTh(start=0.0);
+  Modelica.Units.SI.Area Amech_th;
+  Modelica.Units.SI.Area AeTh;
+  Modelica.Units.SI.Velocity V_th(start= 0.0);
   Real MNth;
   Medium.BaseProperties fluidStat_th
   (
@@ -82,7 +82,7 @@ partial model NozzleConv_Base
     "flow station of throat";
   //-----
   //--full expansion--
-  Modelica.SIunits.Velocity V_th_fullExp(start=0.0);
+  Modelica.Units.SI.Velocity V_th_fullExp(start=0.0);
   Medium.BaseProperties fluidStat_th_fullExp
   (
     p.start= pStat_th_fullExp_init, T.start= TStat_th_fullExp_init,
@@ -91,7 +91,7 @@ partial model NozzleConv_Base
   )
     "";
   //--choked states--
-  Modelica.SIunits.Velocity V_th_choked(start=0.0);
+  Modelica.Units.SI.Velocity V_th_choked(start=0.0);
   Medium.BaseProperties fluidStat_th_choked
   (
     p.start= pStat_th_choked_init, T.start= TStat_th_choked_init,
@@ -104,63 +104,63 @@ partial model NozzleConv_Base
     Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {50, 2.9976e-15}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //********** Initialization Parameters **********
   //--- fluid_2Tot ---
-  parameter Modelica.SIunits.Pressure p2Tot_init(displayUnit="Pa")= p1_init
+  parameter Modelica.Units.SI.Pressure p2Tot_init(displayUnit="Pa")= p1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature T2Tot_init(displayUnit="K")= T1_init
+  parameter Modelica.Units.SI.Temperature T2Tot_init(displayUnit="K")= T1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy h2Tot_init(displayUnit="J/kg")= h1_init
+  parameter Modelica.Units.SI.SpecificEnthalpy h2Tot_init(displayUnit="J/kg")= h1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   //--- fluidStat_th ---
-  parameter Modelica.SIunits.Pressure pStat_th_init(displayUnit="Pa")= p2_init
+  parameter Modelica.Units.SI.Pressure pStat_th_init(displayUnit="Pa")= p2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature TStat_th_init(displayUnit="K")= T2_init
+  parameter Modelica.Units.SI.Temperature TStat_th_init(displayUnit="K")= T2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy hStat_th_init(displayUnit="J/kg")= h2_init
+  parameter Modelica.Units.SI.SpecificEnthalpy hStat_th_init(displayUnit="J/kg")= h2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   //--- fluidStat_th_fullExp ---
-  parameter Modelica.SIunits.Pressure pStat_th_fullExp_init(displayUnit="Pa")= p2_init
+  parameter Modelica.Units.SI.Pressure pStat_th_fullExp_init(displayUnit="Pa")= p2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature TStat_th_fullExp_init(displayUnit="K")= T2_init
+  parameter Modelica.Units.SI.Temperature TStat_th_fullExp_init(displayUnit="K")= T2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy hStat_th_fullExp_init(displayUnit="J/kg")= h2_init
+  parameter Modelica.Units.SI.SpecificEnthalpy hStat_th_fullExp_init(displayUnit="J/kg")= h2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   //--- fluidStat_th_choked ---
-  parameter Modelica.SIunits.Pressure pStat_th_choked_init(displayUnit="Pa")= p2_init
+  parameter Modelica.Units.SI.Pressure pStat_th_choked_init(displayUnit="Pa")= p2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature TStat_th_choked_init(displayUnit="K")= T2_init
+  parameter Modelica.Units.SI.Temperature TStat_th_choked_init(displayUnit="K")= T2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy hStat_th_choked_init(displayUnit="J/kg")= h2_init
+  parameter Modelica.Units.SI.SpecificEnthalpy hStat_th_choked_init(displayUnit="J/kg")= h2_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   //--- fluid_th ---
-  parameter Modelica.SIunits.Pressure p_th_init(displayUnit="Pa")= p1_init
+  parameter Modelica.Units.SI.Pressure p_th_init(displayUnit="Pa")= p1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   
-  parameter Modelica.SIunits.Temperature T_th_init(displayUnit="K")= T1_init
+  parameter Modelica.Units.SI.Temperature T_th_init(displayUnit="K")= T1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
     
-  parameter Modelica.SIunits.SpecificEnthalpy h_th_init(displayUnit="J/kg")= h1_init
+  parameter Modelica.Units.SI.SpecificEnthalpy h_th_init(displayUnit="J/kg")= h1_init
     ""
     annotation(Dialog(tab="Initialization", group="Fluid states"));
   

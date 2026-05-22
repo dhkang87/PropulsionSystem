@@ -16,15 +16,15 @@ model dPqP_Wc2ndOrder
   
   
   //********** Internal variables **********
-  Modelica.SIunits.MassFlowRate Wc;
+  Modelica.Units.SI.MassFlowRate Wc;
   Real dPqP_internal;
   
   outer Real k_dPqP;
-  outer Modelica.SIunits.MassFlowRate dm;
+  outer Modelica.Units.SI.MassFlowRate dm;
   outer Medium.BaseProperties fluid_I "flow station of inlet";
   
-  constant Modelica.SIunits.Temperature Tstd= 288.15;
-  constant Modelica.SIunits.AbsolutePressure pStd= 101.315*1000;
+  constant Modelica.Units.SI.Temperature Tstd= 288.15;
+  constant Modelica.Units.SI.AbsolutePressure pStd= 101.315*1000;
   
   
   //********** Interfaces **********

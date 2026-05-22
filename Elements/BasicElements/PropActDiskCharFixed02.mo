@@ -9,7 +9,7 @@ model PropActDiskCharFixed02
   import PropulsionSystem.Types.switches;
   import epsiron= Modelica.Constants.small;
   import Streams= Modelica.Utilities.Streams;
-  import Units= Modelica.SIunits;
+  import Units= Modelica.Units.SI;
   
   
   /********************************************************
