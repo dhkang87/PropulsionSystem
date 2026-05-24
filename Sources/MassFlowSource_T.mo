@@ -2,6 +2,7 @@ within PropulsionSystem.Sources;
 
 model MassFlowSource_T
   "same model as MassFlowSource_T in MSL. Initialization parameters are added."
+  import units = Modelica.Units.SI;
   extends Modelica.Fluid.Sources.MassFlowSource_T(
     medium.p(start=p_init),
     medium.T(start=T_init),
@@ -15,13 +16,13 @@ model MassFlowSource_T
   --------------------------------------------- */
   //********** Initialization Parameters **********
   //--- fluid, port ---
-  parameter Modelica.SIunits.MassFlowRate m_flow_init(displayUnit = "kg/s") = -0.01 "" annotation(
+  parameter units.MassFlowRate m_flow_init(displayUnit = "kg/s") = -0.01 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Pressure p_init(displayUnit = "Pa") = 20* 101.3 * 1000 "" annotation(
+  parameter units.Pressure p_init(displayUnit = "Pa") = 20* 101.3 * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.Temperature T_init(displayUnit = "K") = 400.0 "" annotation(
+  parameter units.Temperature T_init(displayUnit = "K") = 400.0 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
-  parameter Modelica.SIunits.SpecificEnthalpy h_init(displayUnit = "J/kg") = T_init * 1000 "" annotation(
+  parameter units.SpecificEnthalpy h_init(displayUnit = "J/kg") = T_init * 1000 "" annotation(
     Dialog(tab = "Initialization", group = "fluid_1"));
   
   

@@ -83,6 +83,16 @@ model FlightCondition2InletFluid00
   parameter units.SpecificEntropy s_fluid_inlet_init=7000.0 "" annotation(
     Dialog(tab = "Initialization", group = "others")
   );
+  // OpenModelica NF can fail on self-referential modifiers (a=a) in nested components.
+  // Use explicit aliases to keep behavior while avoiding mergeSubscripts internal errors.
+  final parameter units.MassFlowRate m_flow2Inlet_init_alias = m_flow2Inlet_init;
+  final parameter units.Pressure p2Inlet_init_alias = p2Inlet_init;
+  final parameter units.Temperature T2Inlet_init_alias = T2Inlet_init;
+  final parameter units.SpecificEnthalpy h2Inlet_init_alias = h2Inlet_init;
+  final parameter units.MassFlowRate m_flowAmb_init_alias = m_flowAmb_init;
+  final parameter units.Pressure pAmb_init_alias = pAmb_init;
+  final parameter units.Temperature Tamb_init_alias = Tamb_init;
+  final parameter units.SpecificEnthalpy hAmb_init_alias = hAmb_init;
   
   
   /* ---------------------------------------------
@@ -100,7 +110,7 @@ model FlightCondition2InletFluid00
           Internal objects
       --------------------------------------------- */
   inner outer PropulsionSystem.EngineSimEnvironment environment "System wide properties";
-  PropulsionSystem.Subelements.AltMN2pTh00 AltMN2pTh(redeclare package Medium = Medium, T2Inlet_init = T2Inlet_init, Tamb_init = Tamb_init, h2Inlet_init = h2Inlet_init, hAmb_init = hAmb_init, m_flow2Inlet_init = m_flow2Inlet_init, m_flowAmb_init = m_flowAmb_init, p2Inlet_init = p2Inlet_init, pAmb_init = pAmb_init) annotation(
+  PropulsionSystem.Subelements.AltMN2pTh00 AltMN2pTh(redeclare package Medium = Medium, T2Inlet_init = T2Inlet_init_alias, Tamb_init = Tamb_init_alias, h2Inlet_init = h2Inlet_init_alias, hAmb_init = hAmb_init_alias, m_flow2Inlet_init = m_flow2Inlet_init_alias, m_flowAmb_init = m_flowAmb_init_alias, p2Inlet_init = p2Inlet_init_alias, pAmb_init = pAmb_init_alias) annotation(
     Placement(visible = true, transformation(origin = {-50, 10}, extent = {{-30, -30}, {30, 30}}, rotation = 0)));
   Modelica.Fluid.Sources.Boundary_pT sourceFluidAmb(redeclare package Medium = Medium, nPorts = 1, use_C_in = true, use_T_in = true, use_X_in = true, use_p_in = true, medium.p(start = pAmb_init), medium.T(start = Tamb_init), medium.h(start = hAmb_init), T_in(start = Tamb_init, min = 1.0e-10), p_in(start = pAmb_init, min = 1.0e-10)) annotation(
     Placement(visible = true, transformation(origin = {60, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
