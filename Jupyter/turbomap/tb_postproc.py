@@ -38,6 +38,7 @@ EXCLUDE_PATTERNS = [
 ]
 
 KEY_SUFFIXES: dict[str, str] = {
+    # ── Modelica (PropulsionSystem / NPSS-style) ──
     "pwr": "Power [W]",
     "trq": "Torque [N.m]",
     "w": "Angular velocity [rad/s]",
@@ -65,6 +66,22 @@ KEY_SUFFIXES: dict[str, str] = {
     "NcqNcDes_1": "Nc/Nc_des [-]",
     "NqNdes": "N/N_des [-]",
     "Rline": "R-line [-]",
+    # ── VHDL-AMS (Twin Builder GT components) ──
+    "t_out": "Outlet temp [K]",
+    "t_in": "Inlet temp [K]",
+    "p_out": "Outlet pressure [Pa]",
+    "p_in": "Inlet pressure [Pa]",
+    "power": "Power [W]",
+    "torque": "Torque [N.m]",
+    "temp_diff": "Temperature diff [K]",
+    "fa_ratio": "Fuel-air ratio [-]",
+    "mflow": "Mass flow [kg/s]",
+    "mflow_fuel": "Fuel flow [kg/s]",
+    "thrust": "Thrust [N]",
+    "eta": "Efficiency [-]",
+    "eta_comp": "Compressor isentropic efficiency [-]",
+    "eta_t": "Turbine isentropic efficiency [-]",
+    "eta_m": "Mechanical efficiency [-]",
 }
 
 
@@ -76,6 +93,142 @@ class VerificationResult:
     thrust_residual_max: float | None = None
     passed: bool = False
     notes: list[str] = field(default_factory=list)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Signal mapping configuration
+# ═══════════════════════════════════════════════════════════════════════════
+
+@dataclass
+class SignalMap:
+    """
+    Maps physical quantities to platform-specific column name patterns.
+
+    Each field is a list of candidate patterns passed to ``find_col()``.
+    Use classmethods for platform presets.
+    """
+
+    omega: list[str] = field(default_factory=list)
+    Nmech: list[str] = field(default_factory=list)
+    P_cmp: list[str] = field(default_factory=list)
+    P_trb: list[str] = field(default_factory=list)
+    PR_cmp: list[str] = field(default_factory=list)
+    PR_trb: list[str] = field(default_factory=list)
+    eff_cmp: list[str] = field(default_factory=list)
+    eff_trb: list[str] = field(default_factory=list)
+    Fg: list[str] = field(default_factory=list)
+    T_trb_in: list[str] = field(default_factory=list)
+    T_trb_out: list[str] = field(default_factory=list)
+    T_cmp_out: list[str] = field(default_factory=list)
+    Wc_cmp: list[str] = field(default_factory=list)
+    Nc_cmp: list[str] = field(default_factory=list)
+    stations: dict[str, dict[str, list[str]]] = field(default_factory=dict)
+
+    @classmethod
+    def modelica(cls) -> "SignalMap":
+        """Modelica (PropulsionSystem / NPSS-style) naming."""
+        return cls(
+            omega=["inertia1_w", "ShaftGG_w", "Shaft_w", "inertia_w"],
+            Nmech=["Cmp_Nmech", "Cmp.Nmech"],
+            P_cmp=["Cmp_pwr", "Cmp.pwr"],
+            P_trb=["GGT_pwr", "Trb_pwr", "Trb.pwr"],
+            PR_cmp=["Cmp_PR"],
+            PR_trb=["GGT_PR", "Trb_PR"],
+            eff_cmp=["Cmp_eff"],
+            eff_trb=["GGT_eff", "Trb_eff"],
+            Fg=["Nzl_y_Fg", "Nzl_Fg"],
+            T_trb_in=["GGT_fluid_1_T", "Trb_fluid_1_T"],
+            T_trb_out=["GGT_fluid_2_T", "Trb_fluid_2_T"],
+            T_cmp_out=["Cmp_fluid_2_T"],
+            Wc_cmp=["Cmp_Wc_1", "Cmp_Wc"],
+            Nc_cmp=["Cmp_Nc_1", "Cmp_Nc"],
+            stations={
+                "1 (Inlet)": {
+                    "T_patterns": ["Cmp_fluid_1_T", "Inlt_fluid_2_T"],
+                    "p_patterns": ["Cmp_port_1_p", "Inlt_port_2_p"],
+                },
+                "2 (Cmp exit)": {
+                    "T_patterns": ["Cmp_fluid_2_T"],
+                    "p_patterns": ["Cmp_port_2_p"],
+                },
+                "3 (TIT)": {
+                    "T_patterns": ["GGT_fluid_1_T", "Trb_fluid_1_T"],
+                    "p_patterns": ["GGT_port_1_p", "Trb_port_1_p"],
+                },
+                "4 (Trb exit)": {
+                    "T_patterns": ["GGT_fluid_2_T", "Trb_fluid_2_T", "FPT_fluid_2_T"],
+                    "p_patterns": ["GGT_port_2_p", "Trb_port_2_p", "FPT_port_2_p", "Nzl_port_1_p"],
+                },
+                "5 (Nzl exit)": {
+                    "T_patterns": ["Nzl_fluid_2_T"],
+                    "p_patterns": ["Nzl_port_2_p"],
+                },
+            },
+        )
+
+    @classmethod
+    def vhdl_ams(cls) -> "SignalMap":
+        """VHDL-AMS (Twin Builder GT components) naming."""
+        return cls(
+            omega=["mass_rot1.omega"],
+            Nmech=[],
+            P_cmp=["compressor1.power"],
+            P_trb=["turbine1.power"],
+            PR_cmp=[],
+            PR_trb=[],
+            eff_cmp=["compressor1.eta_comp"],
+            eff_trb=["turbine1.eta_t", "turbine1.eta_m"],
+            Fg=["nozzle1.thrust"],
+            T_trb_in=["combustor1.t_out"],
+            T_trb_out=["turbine1.t_out"],
+            T_cmp_out=["compressor1.t_out"],
+            Wc_cmp=[],
+            Nc_cmp=[],
+            stations={
+                "1 (Inlet)": {
+                    "T_patterns": ["inlet1.t_out"],
+                    "p_patterns": ["inlet1.p_out"],
+                },
+                "2 (Cmp exit)": {
+                    "T_patterns": ["compressor1.t_out"],
+                    "p_patterns": ["compressor1.p_out"],
+                },
+                "3 (TIT)": {
+                    "T_patterns": ["combustor1.t_out"],
+                    "p_patterns": ["combustor1.p_out"],
+                },
+                "4 (Trb exit)": {
+                    "T_patterns": ["turbine1.t_out"],
+                    "p_patterns": ["turbine1.p_out"],
+                },
+            },
+        )
+
+    @classmethod
+    def merged(cls) -> "SignalMap":
+        """Combined Modelica + VHDL-AMS patterns (default)."""
+        m = cls.modelica()
+        v = cls.vhdl_ams()
+        return cls(
+            omega=m.omega + v.omega,
+            Nmech=m.Nmech + v.Nmech,
+            P_cmp=m.P_cmp + v.P_cmp,
+            P_trb=m.P_trb + v.P_trb,
+            PR_cmp=m.PR_cmp + v.PR_cmp,
+            PR_trb=m.PR_trb + v.PR_trb,
+            eff_cmp=m.eff_cmp + v.eff_cmp,
+            eff_trb=m.eff_trb + v.eff_trb,
+            Fg=m.Fg + v.Fg,
+            T_trb_in=m.T_trb_in + v.T_trb_in,
+            T_trb_out=m.T_trb_out + v.T_trb_out,
+            T_cmp_out=m.T_cmp_out + v.T_cmp_out,
+            Wc_cmp=m.Wc_cmp + v.Wc_cmp,
+            Nc_cmp=m.Nc_cmp + v.Nc_cmp,
+            stations={k: {
+                "T_patterns": m.stations.get(k, {}).get("T_patterns", []) + v.stations.get(k, {}).get("T_patterns", []),
+                "p_patterns": m.stations.get(k, {}).get("p_patterns", []) + v.stations.get(k, {}).get("p_patterns", []),
+            } for k in dict.fromkeys(list(m.stations) + list(v.stations))},
+        )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -92,11 +245,13 @@ class TBPostProcessor:
         *,
         aedt_version: str = "2026.1",
         non_graphical: bool = False,
+        signal_map: SignalMap | None = None,
     ):
         self.project = str(Path(project).resolve())
         self.design = design
         self.aedt_version = aedt_version
         self.non_graphical = non_graphical
+        self.signal_map = signal_map or SignalMap.merged()
 
         self._tb: Any = None
         self._all_exprs: list[str] = []
@@ -180,12 +335,13 @@ class TBPostProcessor:
 
         if merged is not None:
             merged = merged.sort_values("time").drop_duplicates(subset=["time"]).reset_index(drop=True)
-            # Time scale correction (ps → s if needed)
+            # Time scale correction: TB/AEDT returns time in nanoseconds (ns)
             t_arr = merged["time"].to_numpy(dtype=float)
             t_span = float(np.nanmax(t_arr) - np.nanmin(t_arr))
             if t_span > 1e6:
-                merged["time"] = merged["time"] * 1e-12
-                print(f"Time axis: ps -> s (span={t_span:.2e})")
+                merged["time"] = merged["time"] * 1e-9  # ns → s
+                t_span_s = t_span * 1e-9
+                print(f"Time axis: ns -> s (raw span={t_span:.2e} ns = {t_span_s:.2f} s)")
             print(f"Collected: {len(merged)} steps, {len(found)} signals ({len(missing)} missing)")
         else:
             print("No time-domain data retrieved!")
@@ -222,20 +378,21 @@ class TBPostProcessor:
         t = mdf["time"].to_numpy()
         fc = self.find_col
 
-        col_omega = fc(["inertia1_w", "ShaftGG_w", "Shaft_w", "inertia_w"])
-        col_Nmech = fc(["Cmp_Nmech", "Cmp.Nmech"])
-        col_P_cmp = fc(["Cmp_pwr", "Cmp.pwr"])
-        col_P_trb = fc(["GGT_pwr", "Trb_pwr", "Trb.pwr"])
-        col_PR_cmp = fc(["Cmp_PR"])
-        col_PR_trb = fc(["GGT_PR", "Trb_PR"])
-        col_eff_cmp = fc(["Cmp_eff"])
-        col_eff_trb = fc(["GGT_eff", "Trb_eff"])
-        col_Fg = fc(["Nzl_y_Fg", "Nzl_Fg"])
-        col_T_trb_in = fc(["GGT_fluid_1_T", "Trb_fluid_1_T"])
-        col_T_trb_out = fc(["GGT_fluid_2_T", "Trb_fluid_2_T"])
-        col_T_cmp_out = fc(["Cmp_fluid_2_T"])
-        col_Wc_cmp = fc(["Cmp_Wc_1", "Cmp_Wc"])
-        col_Nc_cmp = fc(["Cmp_Nc_1", "Cmp_Nc"])
+        sm = self.signal_map
+        col_omega = fc(sm.omega)
+        col_Nmech = fc(sm.Nmech)
+        col_P_cmp = fc(sm.P_cmp)
+        col_P_trb = fc(sm.P_trb)
+        col_PR_cmp = fc(sm.PR_cmp)
+        col_PR_trb = fc(sm.PR_trb)
+        col_eff_cmp = fc(sm.eff_cmp)
+        col_eff_trb = fc(sm.eff_trb)
+        col_Fg = fc(sm.Fg)
+        col_T_trb_in = fc(sm.T_trb_in)
+        col_T_trb_out = fc(sm.T_trb_out)
+        col_T_cmp_out = fc(sm.T_cmp_out)
+        col_Wc_cmp = fc(sm.Wc_cmp)
+        col_Nc_cmp = fc(sm.Nc_cmp)
 
         fig_title = title or f"{self.design} — Transient Analysis"
         fig, axes = plt.subplots(4, 2, figsize=(16, 18))
@@ -390,30 +547,9 @@ class TBPostProcessor:
                 return float(np.nanmean(arr))
             return None
 
-        # Station definitions (auto-detect)
+        # Station definitions (auto-detect from signal_map)
         if stations is None:
-            stations = {
-                "1 (Inlet)": {
-                    "T_patterns": ["Cmp_fluid_1_T", "Inlt_fluid_2_T"],
-                    "p_patterns": ["Cmp_port_1_p", "Inlt_port_2_p"],
-                },
-                "2 (Cmp exit)": {
-                    "T_patterns": ["Cmp_fluid_2_T"],
-                    "p_patterns": ["Cmp_port_2_p"],
-                },
-                "3 (TIT)": {
-                    "T_patterns": ["GGT_fluid_1_T", "Trb_fluid_1_T"],
-                    "p_patterns": ["GGT_port_1_p", "Trb_port_1_p"],
-                },
-                "4 (Trb exit)": {
-                    "T_patterns": ["GGT_fluid_2_T", "Trb_fluid_2_T", "FPT_fluid_2_T"],
-                    "p_patterns": ["GGT_port_2_p", "Trb_port_2_p", "FPT_port_2_p", "Nzl_port_1_p"],
-                },
-                "5 (Nzl exit)": {
-                    "T_patterns": ["Nzl_fluid_2_T"],
-                    "p_patterns": ["Nzl_port_2_p"],
-                },
-            }
+            stations = self.signal_map.stations
 
         # Extract station data
         cycle_T, cycle_p = [], []
@@ -518,14 +654,15 @@ class TBPostProcessor:
                 return float(np.nanmean(arr))
             return None
 
-        col_omega = fc(["inertia1_w", "ShaftGG_w", "Shaft_w"])
-        col_Nmech = fc(["Cmp_Nmech"])
-        col_P_cmp = fc(["Cmp_pwr"])
-        col_P_trb = fc(["GGT_pwr", "Trb_pwr"])
-        col_PR_cmp = fc(["Cmp_PR"])
-        col_eff_cmp = fc(["Cmp_eff"])
-        col_T_trb_in = fc(["GGT_fluid_1_T", "Trb_fluid_1_T"])
-        col_Fg = fc(["Nzl_y_Fg", "Nzl_Fg"])
+        sm = self.signal_map
+        col_omega = fc(sm.omega)
+        col_Nmech = fc(sm.Nmech)
+        col_P_cmp = fc(sm.P_cmp)
+        col_P_trb = fc(sm.P_trb)
+        col_PR_cmp = fc(sm.PR_cmp)
+        col_eff_cmp = fc(sm.eff_cmp)
+        col_T_trb_in = fc(sm.T_trb_in)
+        col_Fg = fc(sm.Fg)
 
         omega_src = col_omega or col_Nmech
         if omega_src:

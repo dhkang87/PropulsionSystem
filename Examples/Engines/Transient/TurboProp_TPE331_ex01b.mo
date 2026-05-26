@@ -1,7 +1,7 @@
 within PropulsionSystem.Examples.Engines.Transient;
 
 model TurboProp_TPE331_ex01b
-  "TPE331 twin-spool: GG + FPT with fixed PT speed (gas-path coupling verification)"
+  "TPE331 single-shaft turboprop: Cmp+Trb on one shaft with propeller load (gear-referred torque)"
   extends Modelica.Icons.Example;
   //-----
   package engineAir = PropulsionSystem.Media.EngineBreathingAir.DryAirMethaneMixture00;
@@ -15,6 +15,8 @@ model TurboProp_TPE331_ex01b
   //========================================================================
   PropulsionSystem.Sources.FlightCondition2InletFluid00 Flt2Fluid(
     redeclare package Medium = engineAir,
+    alt_paramInput = 0.0,
+    MN_paramInput = 0.0,
     printCmd = false) annotation(
     Placement(visible = true, transformation(origin = {-180, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   PropulsionSystem.Elements.BasicElements.InltCharFixed00 Inlt(
@@ -55,57 +57,58 @@ model TurboProp_TPE331_ex01b
     use_m_flow_in = true) annotation(
     Placement(visible = true, transformation(origin = {-20, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
-  //  Gas Generator Turbine (GGT) — fixed PR/eff (no table)
+  //  Turbine (single, 3-stage axial) — PR=8, eff=0.87
+  //  Full expansion in single-shaft TPE331
   //========================================================================
-  PropulsionSystem.Elements.BasicElements.TrbCharFixed00 GGT(
+  PropulsionSystem.Elements.BasicElements.TrbCharFixed00 Trb(
     redeclare package Medium = engineAir,
     switchDetermine_PR = PropulsionSystem.Types.switches.switchHowToDetVar.param,
-    PRdes_paramInput = 3.2,
-    effDes_paramInput = 0.86) annotation(
+    PRdes_paramInput = 8.0,
+    effDes_paramInput = 0.87) annotation(
     Placement(visible = true, transformation(origin = {100, -80}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   //========================================================================
-  //  Free Power Turbine (FPT) — fixed PR/eff (no table)
-  //========================================================================
-  PropulsionSystem.Elements.BasicElements.TrbCharFixed00 FPT(
-    redeclare package Medium = engineAir,
-    switchDetermine_PR = PropulsionSystem.Types.switches.switchHowToDetVar.param,
-    PRdes_paramInput = 1.8,
-    effDes_paramInput = 0.88) annotation(
-    Placement(visible = true, transformation(origin = {180, -80}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-  //========================================================================
-  //  Exhaust nozzle (after FPT)
+  //  Exhaust nozzle
+  //  NOTE: Turboprop exhaust is low-velocity subsonic (most energy to shaft).
+  //  Nozzle area heuristic (0.0014*m_flow) is for turbojet-like choked nozzle.
+  //  For turboprop, set m_flow_1_des large to ensure non-restrictive exhaust.
+  //  A = 0.0014*50 ≈ 0.07 m² → passes 8+ kg/s subsonic at PR_nzl≈1.2
   //========================================================================
   PropulsionSystem.Elements.BasicElements.NzlDefAeByFlowCharFixed00 Nzl(
     redeclare package Medium = engineAir,
-    m_flow_1_des_paramInput = 8.2,
+    m_flow_1_des_paramInput = 50.0,
     printCmd = false) annotation(
-    Placement(visible = true, transformation(origin = {260, -80}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+    Placement(visible = true, transformation(origin = {180, -80}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   //========================================================================
-  //  GG Shaft (Cmp + GGT)
+  //  Single Shaft (Cmp + Trb + PropLoad)
   //========================================================================
-  Modelica.Mechanics.Rotational.Components.Inertia ShaftGG(
+  Modelica.Mechanics.Rotational.Components.Inertia Shaft(
     J = 0.5,
     phi(fixed = true, start = 0),
-    w(fixed = true, start = 41730.0 * 2 * Modelica.Constants.pi / 60)) "GG shaft at design speed (41730 rpm — in map range)" annotation(
+    w(fixed = true, start = 25000.0 * 2 * Modelica.Constants.pi / 60)) "Start at 25000 rpm (Nc=0.60), accelerate to design" annotation(
     Placement(visible = true, transformation(origin = {20, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
-  //  PT Shaft — fixed speed (simplifies init; verifies gas-path coupling)
+  //  Propeller load (referred to turbine shaft via gear ratio)
+  //
+  //  TPE331 reduction gear: GR = 20.87, eta_gear = 0.98
+  //  Q_turbine = Q_prop / (GR * eta_gear)
+  //  Idle: 23 N.m | Cruise: 114 N.m | Max T/O: 163 N.m
   //========================================================================
-  Modelica.Mechanics.Rotational.Sources.Speed PTspeed(
-    useSupport = false,
-    exact = true) "Prescribed PT speed (algebraic OK with TrbCharFixed)" annotation(
-    Placement(visible = true, transformation(origin = {180, -120}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant PTspeed_cmd(
-    k = 30000.0 * 2 * Modelica.Constants.pi / 60) "PT speed = 30000 rpm (constant)" annotation(
-    Placement(visible = true, transformation(origin = {140, -120}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.Rotational.Sources.Torque PropLoad annotation(
+    Placement(visible = true, transformation(origin = {20, -120}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
+  Modelica.Blocks.Sources.Ramp ramp_PropTorque(
+    height = -120,
+    duration = 10,
+    offset = -10,
+    startTime = 30) "PropLoad: -10 (start) -> -130 N.m (cruise) after shaft reaches design" annotation(
+    Placement(visible = true, transformation(origin = {-20, -140}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
   //  Fuel flow command (constant then ramp)
   //========================================================================
   Modelica.Blocks.Sources.Ramp ramp_m_flow_fuel(
-    height = 0.02,
-    duration = 5,
-    offset = 0.15,
-    startTime = 10) "Fuel: 0.15 steady then ramp to 0.17 (same as ex01a)" annotation(
+    height = 0.045,
+    duration = 25,
+    offset = 0.020,
+    startTime = 2) "Fuel: 0.020 -> 0.065 kg/s over 25s (start-up acceleration)" annotation(
     Placement(visible = true, transformation(origin = {-60, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
   //  Sensors
@@ -131,45 +134,58 @@ equation
   //--- Fuel -> Combustor ---
   connect(FuelSrc.ports[1], Comb.port_fuel) annotation(
     Line(points = {{-10, -10}, {4, -10}, {4, -24}}, color = {0, 127, 255}));
-  //--- Combustor -> TIT sensor -> GGT ---
+  //--- Combustor -> TIT sensor -> Turbine ---
   connect(Comb.port_2, T4_sensor.port) annotation(
     Line(points = {{40, -40}, {60, -40}}, color = {0, 127, 255}));
-  connect(T4_sensor.port, GGT.port_1) annotation(
+  connect(T4_sensor.port, Trb.port_1) annotation(
     Line(points = {{60, -40}, {80, -40}, {80, -64}}, color = {0, 127, 255}));
-  //--- GGT -> FPT ---
-  connect(GGT.port_2, FPT.port_1) annotation(
+  //--- Turbine -> Nozzle ---
+  connect(Trb.port_2, Nzl.port_1) annotation(
     Line(points = {{120, -64}, {160, -64}}, color = {0, 127, 255}));
-  //--- FPT -> Nozzle ---
-  connect(FPT.port_2, Nzl.port_1) annotation(
-    Line(points = {{200, -64}, {240, -64}}, color = {0, 127, 255}));
   //--- Nozzle exhaust -> ambient ---
   connect(Flt2Fluid.port_amb, Nzl.port_2) annotation(
-    Line(points = {{-180, -40}, {-180, 60}, {280, 60}, {280, -64}}, color = {0, 127, 255}));
-  //--- GG Shaft: Cmp <-> GGT ---
-  connect(Cmp.flange_2, ShaftGG.flange_a) annotation(
+    Line(points = {{-180, -40}, {-180, 60}, {200, 60}, {200, -64}}, color = {0, 127, 255}));
+  //--- Single Shaft: Cmp <-> Shaft <-> Trb ---
+  connect(Cmp.flange_2, Shaft.flange_a) annotation(
     Line(points = {{-40, -80}, {10, -80}}));
-  connect(ShaftGG.flange_b, GGT.flange_1) annotation(
+  connect(Shaft.flange_b, Trb.flange_1) annotation(
     Line(points = {{30, -80}, {80, -80}}));
-  //--- PT Shaft: FPT -> fixed speed ---
-  connect(PTspeed_cmd.y, PTspeed.w_ref) annotation(
-    Line(points = {{151, -120}, {168, -120}}, color = {0, 0, 127}));
-  connect(FPT.flange_2, PTspeed.flange) annotation(
-    Line(points = {{200, -80}, {200, -120}, {190, -120}}));
+  //--- Propeller load (gear-referred) -> Shaft ---
+  connect(ramp_PropTorque.y, PropLoad.tau) annotation(
+    Line(points = {{-9, -140}, {20, -140}, {20, -130}}, color = {0, 0, 127}));
+  connect(PropLoad.flange, Shaft.flange_b) annotation(
+    Line(points = {{20, -110}, {20, -100}, {40, -100}, {40, -80}, {30, -80}}));
   annotation(
-    experiment(StartTime = 0, StopTime = 30, Tolerance = 1e-06, Interval = 0.02),
-    Diagram(coordinateSystem(extent = {{-220, -150}, {300, 100}})),
+    experiment(StartTime = 0, StopTime = 60, Tolerance = 1e-06, Interval = 0.02),
+    Diagram(coordinateSystem(extent = {{-220, -160}, {220, 100}})),
     Documentation(info = "<html>
-<h4>TPE331 Twin-Spool: GG + FPT with Fixed PT Speed</h4>
-<p>Purpose: Verify two-spool gas-path coupling (GGT/FPT pressure split) without dynamic init coupling.</p>
+<h4>TPE331 Single-Shaft Turboprop with Propeller Load (ex01b)</h4>
+<p>Purpose: Verify single-shaft operation with realistic propeller load.</p>
+<h5>Architecture</h5>
+<pre>
+Flt2Fluid -> Inlet -> Cmp(PR=10) -> Comb -> Trb(PR=8) -> Nzl
+                           |--- Shaft (J=0.5) ---|
+                                    |
+                              PropLoad (gear-referred)
+</pre>
+<h5>Gear Ratio and Load Conversion</h5>
 <ul>
-<li>GG spool: Compressor + GGT (J_GG=0.5 kg.m2, init at 41730 rpm)</li>
-<li>PT spool: FPT with prescribed constant speed (30000 rpm) — no inertia/load dynamics</li>
-<li>Gas path: Cmp -> Comb -> GGT -> FPT -> Nzl</li>
-<li>Input: fuel flow ramp (0.15 -> 0.17 kg/s at t=10s)</li>
-<li>Observe: GGT PR moves toward design (~3.2) since FPT consumes downstream PR</li>
+<li>TPE331 reduction gear: GR = 20.87 (N_turbine/N_prop = 41730/2000)</li>
+<li>Gear efficiency: eta_gear = 0.98</li>
+<li>Q_turbine = Q_prop / (GR * eta_gear)</li>
 </ul>
-<p>Fixed PT speed eliminates the coupled dynamic init that causes OCT solver failure.
-This verifies the gas-path pressure distribution across GGT+FPT before adding PT dynamics.</p>
-<p>Next: ex01c with free-spinning PT shaft (Inertia + ConstantTorque) using ex01b SS as init guess.</p>
+<table border=\"1\">
+<tr><th>Condition</th><th>Power [kW]</th><th>Q_prop [N.m]</th><th>Q_turbine [N.m]</th></tr>
+<tr><td>Max T/O</td><td>700</td><td>3342</td><td>163</td></tr>
+<tr><td>Cruise (70%)</td><td>490</td><td>2340</td><td>114</td></tr>
+<tr><td>Idle</td><td>100</td><td>477</td><td>23</td></tr>
+</table>
+<h5>Simulation Scenario</h5>
+<ol>
+<li>t=0~10s: Idle prop load (-23 N.m), fuel=0.15 kg/s, shaft stabilizes</li>
+<li>t=10~15s: Fuel ramp 0.15 to 0.17, shaft accelerates</li>
+<li>t=20~25s: Prop load ramp -23 to -114 N.m (idle to cruise)</li>
+</ol>
+<p>Observe: shaft speed droop under load, TIT response, compressor operating point shift.</p>
 </html>"));
 end TurboProp_TPE331_ex01b;

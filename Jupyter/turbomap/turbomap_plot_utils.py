@@ -204,21 +204,24 @@ def plot_turbine_maps_2x2(
     figsize=(14, 10), colors=None, NmechDes_dict=None,
 ):
     """
-    Plot GGT/FPT turbine maps in a 2×2 layout.
+    Plot turbine maps in a 2×N layout.
     Top row: x=PR, y=Corrected Wc.  Bottom row: x=PR, y=Efficiency.
+    Accepts any key names (e.g. "GGT", "FPT", "Trb").
     """
-    keys = [k for k in ["GGT", "FPT"] if k in scaled_maps]
+    # Accept any keys present in the dict (preserve insertion order)
+    keys = list(scaled_maps.keys())
     if not keys:
-        raise ValueError("scaled_maps must contain at least one of 'GGT', 'FPT'")
+        raise ValueError("scaled_maps must contain at least one turbine entry")
 
+    _default_colors = ["tab:red", "tab:purple", "tab:blue", "tab:orange"]
     if colors is None:
-        colors = {"GGT": "tab:red", "FPT": "tab:purple"}
+        colors = {k: _default_colors[i % len(_default_colors)] for i, k in enumerate(keys)}
     if NmechDes_dict is None:
-        NmechDes_dict = {"GGT": 40000.0, "FPT": 30000.0}
+        NmechDes_dict = {k: 40000.0 for k in keys}
 
     n_cols = len(keys)
     fig, axes = plt.subplots(2, n_cols, figsize=figsize, constrained_layout=True, squeeze=False)
-    title_labels = {"GGT": "Gas Generator Turbine", "FPT": "Free Power Turbine"}
+    title_labels = {"GGT": "Gas Generator Turbine", "FPT": "Free Power Turbine", "Trb": "Turbine"}
 
     for col, key in enumerate(keys):
         d = scaled_maps[key]
