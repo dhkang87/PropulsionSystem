@@ -47,9 +47,9 @@ model InletMap_effRam
   outer Real NcqNcDesCurveDes "";
   
   
-  Modelica.Blocks.Tables.CombiTable2D table_effRam annotation(
+  Modelica.Blocks.Tables.CombiTable2Ds table_effRam annotation(
     Placement(visible = true, transformation(origin = {0, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Tables.CombiTable2D table_effRamDes annotation(
+  Modelica.Blocks.Tables.CombiTable2Ds table_effRamDes annotation(
     Placement(visible = true, transformation(origin = {0, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   annotation(
     Icon(graphics = {Rectangle(lineColor = {255, 0, 0}, lineThickness = 4, extent = {{-100, 100}, {100, -100}}), Line(points = {{-100, 100}, {100, -100}}, color = {255, 0, 0}, thickness = 4)}));

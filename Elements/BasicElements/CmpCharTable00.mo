@@ -117,7 +117,7 @@ model CmpCharTable00
   /* ---------------------------------------------
                   Internal variables
       --------------------------------------------- */
-  Real Rline;
+  Real Rline(start = RlineTblDes_paramInput);
   Real s_WcAud;
   Real s_PRaud;
   Real s_effAud;

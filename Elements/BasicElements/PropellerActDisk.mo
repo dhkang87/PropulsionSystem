@@ -57,7 +57,7 @@ equation
   
   //----- eqns describing physics -----
   der(phi) = omega;
-  Nmech = Modelica.Units.NonSI.to_rpm(omega);
+  Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   pwr= trq*omega;
   pwrPropulsive= pwr*effProp;
   pwrPropulsive= Fg*Vin;

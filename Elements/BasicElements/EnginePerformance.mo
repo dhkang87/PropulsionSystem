@@ -22,11 +22,11 @@ model EnginePerformance
   Real TSFC "";
   Real TSFC_Bt "";
   //********** Interfaces **********
-  Modelica.Blocks.Interfaces.RealInput u_Fg annotation(
+  Modelica.Blocks.Interfaces.RealInput Fg_in annotation(
     Placement(visible = true, transformation(origin = {-120, 60}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-110, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Interfaces.RealInput u_Fram annotation(
+  Modelica.Blocks.Interfaces.RealInput Fram_in annotation(
     Placement(visible = true, transformation(origin = {-120, 20}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-110, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Interfaces.RealInput u_m_flow_fuel annotation(
+  Modelica.Blocks.Interfaces.RealInput dm_fuel_in annotation(
     Placement(visible = true, transformation(origin = {-120, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-110, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput u_FdScrub if use_FdScrub_in annotation(
     Placement(visible = true, transformation(origin = {-120, -20}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-110, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -52,9 +52,9 @@ equation
   else
     FdScrub = 0.0;
   end if;
-  Fg = u_Fg;
-  Fram = u_Fram;
-  m_flow_fuel = u_m_flow_fuel;
+  Fg = Fg_in;
+  Fram = Fram_in;
+  m_flow_fuel = dm_fuel_in;
   y_Fn = Fn;
   y_TSFC = TSFC;
   u_TSFC_Bt = TSFC_Bt;

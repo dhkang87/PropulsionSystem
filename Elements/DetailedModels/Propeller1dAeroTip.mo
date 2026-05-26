@@ -5,7 +5,6 @@ model Propeller1dAeroTip
         imports
     ********************************************************/
   import Modelica.Constants;
-  import PropulsionSystem.Types.switches;
   /********************************************************
         Declaration
     ********************************************************/
@@ -29,27 +28,27 @@ model Propeller1dAeroTip
     Dialog(group = "Geometry"));
   parameter Real numBlade_def = 4 "number of blades" annotation(
     Dialog(group = "Geometry"));
-  //--- inner-connected, to AirfoilSimple ---
-  inner parameter Real ClmaxDes = 1.5 "" annotation(
+  //--- airfoil characteristics ---
+  parameter Real ClmaxDes = 1.5 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Modelica.Units.SI.Angle alpha4Cl0des(displayUnit = "deg") = 0.0 "" annotation(
+  parameter Modelica.Units.SI.Angle alpha4Cl0des(displayUnit = "deg") = 0.0 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Modelica.Units.SI.Angle alpha4ClmaxDes(displayUnit = "deg") = 15.0 * Modelica.Constants.pi / 180 "" annotation(
+  parameter Modelica.Units.SI.Angle alpha4ClmaxDes(displayUnit = "deg") = 15.0 * Modelica.Constants.pi / 180 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Modelica.Units.SI.Angle alpha4ClminDes(displayUnit = "deg") = -15.0 * Modelica.Constants.pi / 180 "" annotation(
+  parameter Modelica.Units.SI.Angle alpha4ClminDes(displayUnit = "deg") = -15.0 * Modelica.Constants.pi / 180 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Real CdfDes = 0.01 "" annotation(
+  parameter Real CdfDes = 0.01 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Real alpha_CdpMinDes(displayUnit = "deg") = 0.0 * Modelica.Constants.pi / 180 "" annotation(
+  parameter Real alpha_CdpMinDes(displayUnit = "deg") = 0.0 * Modelica.Constants.pi / 180 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Real kCdpDes = 0.2 "" annotation(
+  parameter Real kCdpDes = 0.2 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Real pwrCdpDes = 4.0 "" annotation(
+  parameter Real pwrCdpDes = 4.0 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
   
-  inner parameter Real kCdp_1_des = 0.5 "" annotation(
+  parameter Real kCdp_1_des = 0.5 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
-  inner parameter Real pwrCdp_1_des = 4.0 "" annotation(
+  parameter Real pwrCdp_1_des = 4.0 "" annotation(
     Dialog(group = "Characteristics, airfoil"));
   
   //********** Initialization Parameters **********
@@ -111,6 +110,12 @@ model Propeller1dAeroTip
   Modelica.Units.SI.MassFlowRate m_flow(min = 0.0, start = m_flow1_init) "m_flow, entire disk";
   Real CL(start = 1.0) "lift coefficient";
   Real CD(start = 0.01) "drag coefficient";
+  //--- inlined airfoil variables (formerly in AirfoilSimple00) ---
+  Real Cl_alpha_loc "lift curve slope";
+  Real Cl0_loc "Cl at zero angle";
+  Real Cdp_loc "pressure drag coefficient";
+  Real CdpStall_loc "Cdp at stall boundary";
+  Real intcptCdp_1_loc "intercept for Cdp beyond stall";
   Modelica.Units.SI.Force FthetaSingle "aero-force, tangential direction, single blade";
   Modelica.Units.SI.Force FaxSingle "aero-force, axial direction, single blade";
   Modelica.Units.SI.Force FliftSingle "lift, single blade";
@@ -172,12 +177,8 @@ model Propeller1dAeroTip
     Placement(visible = true, transformation(origin = {110, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealOutput y_flowSpeed annotation(
     Placement(visible = true, transformation(origin = {110, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {110, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Types.ElementBus elementBus1 annotation(
-    Placement(visible = true, transformation(origin = {70, -90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {70, -90}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //********** internal objects **********
   Medium.BaseProperties fluid_amb(p.start = pAmb_init, T.start = Tamb_init, state.p.start = pAmb_init, state.T.start = Tamb_init, h.start = hAmb_init) "flow station of inlet";
-  AircraftDynamics.Aerodynamics.BaseClasses.AirfoilSimple00 airfoilSimple001 annotation(
-    Placement(visible = true, transformation(origin = {-30.25, 40.2}, extent = {{-49.75, -39.8}, {49.75, 39.8}}, rotation = 0)));
 initial algorithm
   // NONE
 algorithm
@@ -218,6 +219,27 @@ algorithm
   inci1 := beta1 - xi;
   phi1 := Modelica.Constants.pi / 2.0 - beta1;
   
+  //********** Cl/Cd calculation (inlined from AirfoilSimple00) **********
+  Cl_alpha_loc := ClmaxDes / (alpha4ClmaxDes - alpha4Cl0des);
+  Cl0_loc := Cl_alpha_loc * (0 - alpha4Cl0des);
+  if inci1 < alpha4ClminDes then
+    CL := 0;
+  elseif alpha4ClmaxDes < inci1 then
+    CL := 0;
+  else
+    CL := Cl0_loc + Cl_alpha_loc * inci1;
+  end if;
+  CdpStall_loc := kCdpDes * (alpha4ClmaxDes - alpha_CdpMinDes) ^ pwrCdpDes;
+  intcptCdp_1_loc := kCdp_1_des * (alpha4ClmaxDes - alpha_CdpMinDes) ^ pwrCdp_1_des - CdpStall_loc;
+  if inci1 < alpha4ClminDes then
+    Cdp_loc := kCdp_1_des * abs(inci1 - alpha_CdpMinDes) ^ pwrCdp_1_des - intcptCdp_1_loc;
+  elseif alpha4ClmaxDes < inci1 then
+    Cdp_loc := kCdp_1_des * (inci1 - alpha_CdpMinDes) ^ pwrCdp_1_des - intcptCdp_1_loc;
+  else
+    Cdp_loc := kCdpDes * abs(inci1 - alpha_CdpMinDes) ^ pwrCdpDes;
+  end if;
+  CD := CdfDes + Cdp_loc;
+
   //********** Forces **********
   FliftSingle := CL * Sblade * 1.0 / 2.0 * fluid_amb.d * w1 ^ 2.0;
   FdragSingle := CD * Sblade * 1.0 / 2.0 * fluid_amb.d * w1 ^ 2.0;
@@ -264,7 +286,7 @@ algorithm
   
   //********** component characteristics, etc **********
   pwrPropulsive := Fax * c1;
-  Nmech := Modelica.Units.NonSI.to_rpm(omega);
+  Nmech := omega * 60.0 / (2.0 * Modelica.Constants.pi);
   FliftqFdrag := Flift / Fdrag;
   FaxqFtheta := Fax / Ftheta;
   effPropeller := pwrPropulsive / pwr;
@@ -287,9 +309,7 @@ initial equation
 // NONE
 equation
 //********** reinit invalid state variables **********
-  when m_flow < 0.0 then
-    reinit(m_flow, -1.0 * m_flow);
-  end when;
+  // removed: reinit(m_flow) - OCT cannot select algebraic variable as state
 //********** interface **********
 //-- fluidPort_1 --
   fluid_amb.p = port_amb.p;
@@ -307,11 +327,7 @@ equation
 //-- shaft-front, flange_b --
   flange_2.phi = phi;
 //-- internal components --
-  connect(inci1, airfoilSimple001.signalBus1.alpha) annotation(
-    Line);
-  CL = airfoilSimple001.signalBus2.Cl;
-  //CD = airfoilSimple001.signalBus2.Cd;
-  CD = airfoilSimple001.signalBus2.Cd;
+  // CL, CD now computed in algorithm block (inlined from AirfoilSimple00)
 
 //********** physical equations **********
 //-- energy conservation --
@@ -337,9 +353,9 @@ equation
   rEffTip_1= diamEffTip_1/2.0;
   
 //********** flag variables **********
-  if alpha4ClmaxDes < airfoilSimple001.signalBus1.alpha then
+  if alpha4ClmaxDes < inci1 then
     flagBladeStall = true;
-  elseif airfoilSimple001.signalBus1.alpha < alpha4ClminDes then
+  elseif inci1 < alpha4ClminDes then
     flagBladeStall = true;
   else
     flagBladeStall = false;

@@ -78,7 +78,7 @@ equation
   end if;
   
   if (switchConstraint== switch_executeConstraint.Execute) then
-    Nmech = Modelica.Units.NonSI.to_rpm(omega);
+    Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   end if;
   
   phi = flange_a.phi;

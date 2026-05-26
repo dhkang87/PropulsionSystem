@@ -3,7 +3,6 @@ within PropulsionSystem.Elements.BasicElements;
 model NozzleConv_defAmech
   extends PropulsionSystem.Elements.BasicElements.NozzleConv;
   import Modelica.Constants;
-  import PropulsionSystem.FluidFunctions;
   import PropulsionSystem.Types.switches;
   
   /********************************************************

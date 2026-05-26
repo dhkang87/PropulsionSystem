@@ -99,26 +99,12 @@ equation
   pwr = -1.0 * (port_1.m_flow * fluid_1.h + port_2.m_flow * fluid_2.h);
   der(phi) = omega;
   omega * trq = pwr;
-  Nmech = Modelica.Units.NonSI.to_rpm(omega);
+  Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   
-  
-algorithm
-  assert(PR < 0.0,
-      getInstanceName()+", PR got less than 0"+", fluid_1.p="+String(fluid_1.p)+", fluid_2.p="+String(fluid_2.p),
-      AssertionLevel.warning);
-  //--- isentropic expansion ---
-  
-  if((0.0<fluid_2.p)and(0.0<fluid_1.state.p))then
-    
-    h_2is:= Medium.isentropicEnthalpy(fluid_2.p, fluid_1.state);
-    
-  elseif((fluid_2.p<0.0)and(fluid_1.state.p<0.0))then
-    
-    h_2is:= Medium.isentropicEnthalpy(fluid_2.p, fluid_1.state);
-    
-  else
-    h_2is:= Medium.isentropicEnthalpy(-1.0*fluid_2.p, fluid_1.state);
-  end if;
+  //--- isentropic expansion (moved from algorithm to equation for OCT compatibility) ---
+  h_2is = Medium.isentropicEnthalpy(
+    noEvent(if fluid_2.p > 0.0 then fluid_2.p else -fluid_2.p),
+    fluid_1.state);
   
   
   

@@ -54,8 +54,8 @@ partial model Compressor_Base
   
   //********** Internal variables **********
   Modelica.Units.SI.MassFlowRate Wc_1(start= WcDes_1_def) "corrected mass flow rate";
-  Real PR(start = PRdes) "pressure ratio";
-  Real eff(start = effDes) "adiabatic efficiency";
+  Real PR(start = 10.0) "pressure ratio";
+  Real eff(start = 0.8) "adiabatic efficiency";
   Modelica.Units.SI.SpecificEnthalpy dht_is "specific enthalpy change in isentropic compression";
   Modelica.Units.SI.SpecificEnthalpy dht "specific enthalpy change in non-isentropic compression";
   Modelica.Units.SI.SpecificEnthalpy h_2is "";
@@ -67,10 +67,6 @@ partial model Compressor_Base
   //----- inner-outer-connected variables -----
   inner outer PropulsionSystem.EngineSimEnvironment environment "System wide properties";
   
-  
-algorithm
-  assert(PR < 0.0, "PR of compressor element got less than 0",
-      AssertionLevel.warning);
   
 equation
 //********** Geometries **********
@@ -112,7 +108,7 @@ equation
   pwr= -1.0*((port_1.m_flow * fluid_1.h) + (port_2.m_flow * fluid_2.h));
   der(phi)= omega;
   omega*trq= pwr;
-  Nmech= Modelica.Units.NonSI.to_rpm(omega);
+  Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   
   
 /********************************************************

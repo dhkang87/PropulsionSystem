@@ -47,9 +47,9 @@ block PropellerTable_CTCP_Jtheta00
   /* ---------------------------------------------
             Internal objects   
       --------------------------------------------- */
-  Modelica.Blocks.Tables.CombiTable2D combiTable2D_CT(table = tableDefault_CT_Jtheta, tableOnFile = use_tableFile_CT, fileName = fullPathName_tableFile_used, tableName = tableName_CT, smoothness = switchSmoothness_CT) "" annotation(
+  Modelica.Blocks.Tables.CombiTable2Ds combiTable2D_CT(table = tableDefault_CT_Jtheta, tableOnFile = use_tableFile_CT, fileName = fullPathName_tableFile_used, tableName = tableName_CT, smoothness = switchSmoothness_CT) "" annotation(
     Placement(visible = true, transformation(origin = {-10, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Tables.CombiTable2D combiTable2D_CP(table = tableDefault_CP_Jtheta, tableOnFile = use_tableFile_CP, fileName = fullPathName_tableFile_used, tableName = tableName_CP, smoothness = switchSmoothness_CP) "" annotation(
+  Modelica.Blocks.Tables.CombiTable2Ds combiTable2D_CP(table = tableDefault_CP_Jtheta, tableOnFile = use_tableFile_CP, fileName = fullPathName_tableFile_used, tableName = tableName_CP, smoothness = switchSmoothness_CP) "" annotation(
     Placement(visible = true, transformation(origin = {-10, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   
   

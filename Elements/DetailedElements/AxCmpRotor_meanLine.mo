@@ -143,10 +143,9 @@ initial equation
 //xi.start= xi_def;
 equation
 //********** interface **********
-  connect(inci1, airfoilSimple001.signalBus1.alpha) annotation(
-    Line);
-  CL = airfoilSimple001.signalBus2.Cl;
-  CD = airfoilSimple001.signalBus2.Cd;
+  airfoilSimple001.alpha = inci1;
+  CL = airfoilSimple001.Cl;
+  CD = airfoilSimple001.Cd;
 //********** Geometries **********
   rMean = (rTip_1 + rHub_1 + rTip_2 + rHub_2) / 4.0;
   BR_1 = rHub_1 / rTip_1;
@@ -215,7 +214,7 @@ equation
   pwr = -1.0 * (port_1.m_flow * fluid_1.h + port_2.m_flow * fluid_2.h);
   der(phi) = omega;
   omega * trq = pwr;
-  Nmech = Modelica.Units.NonSI.to_rpm(omega);
+  Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   annotation(
     Icon(graphics = {Rectangle(origin = {52, -2}, fillPattern = FillPattern.Solid, extent = {{-92, 6}, {-12, -2}}), Polygon(origin = {-1, 46}, fillColor = {0, 0, 127}, fillPattern = FillPattern.Solid, points = {{-11, 54}, {-11, -26}, {11, -22}, {11, 48}, {-11, 54}}), Line(origin = {-39.7738, -9.94116}, points = {{0, 10}, {-60, 10}}, pattern = LinePattern.Dot, thickness = 1.5), Line(origin = {98.77, -10.2247}, points = {{0, 10}, {-60, 10}}, pattern = LinePattern.Dot, thickness = 1.5), Rectangle(origin = {-2, 10}, fillPattern = FillPattern.Solid, extent = {{-4, 12}, {6, -10}})}, coordinateSystem(initialScale = 0.1)),
     __OpenModelica_commandLineOptions = "");

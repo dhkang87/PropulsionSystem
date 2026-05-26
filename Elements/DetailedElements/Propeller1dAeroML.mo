@@ -274,10 +274,9 @@ equation
 //-- shaft-front, flange_b --
   flange_2.phi = phi;
 //-- internal components --
-  connect(inci1, airfoilSimple001.signalBus1.alpha) annotation(
-    Line);
-  CL = airfoilSimple001.signalBus2.Cl;
-  CD = airfoilSimple001.signalBus2.Cd;
+  airfoilSimple001.alpha = inci1;
+  CL = airfoilSimple001.Cl;
+  CD = airfoilSimple001.Cd;
 //********** physical equations **********
 //-- energy conservation --
   trq = flange_1.tau + flange_2.tau;
@@ -298,9 +297,9 @@ equation
   AeffAx_1 = Modelica.Constants.pi / 4.0 * (diamEffTip_1 ^ 2.0 - (2.0 * rHub_1) ^ 2.0);
   rEffTip_1 = diamEffTip_1 / 2.0;
 //********** flag variables **********
-  if alpha4ClmaxDes < airfoilSimple001.signalBus1.alpha then
+  if alpha4ClmaxDes < inci1 then
     flagBladeStall = true;
-  elseif airfoilSimple001.signalBus1.alpha < alpha4ClminDes then
+  elseif inci1 < alpha4ClminDes then
     flagBladeStall = true;
   else
     flagBladeStall = false;

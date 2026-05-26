@@ -220,10 +220,9 @@ initial equation
   
 equation
   //********** interface **********
-  connect(inci1, airfoilSimple001.signalBus1.alpha) annotation(
-    Line);
-  CL= airfoilSimple001.signalBus2.Cl;
-  CD= airfoilSimple001.signalBus2.Cd;
+  airfoilSimple001.alpha = inci1;
+  CL = airfoilSimple001.Cl;
+  CD = airfoilSimple001.Cd;
   
   //********** Geometries **********
   rMean= (rTip_1 + rHub_1 + rTip_2 + rHub_2)/4.0;
@@ -305,7 +304,7 @@ equation
   pwr= -1.0*((port_1.m_flow * fluid_1.h) + (port_2.m_flow * fluid_2.h));
   der(phi)= omega;
   omega*trq= pwr;
-  Nmech= Modelica.Units.NonSI.to_rpm(omega);
+  Nmech = omega * 60.0 / (2.0 * Modelica.Constants.pi);
   
   
 annotation(

@@ -137,21 +137,15 @@ algorithm
 equation
   connect(fluid2Eng.ports[1], port_fluid2Eng) annotation(
     Line(points = {{80, 60}, {80, 71}, {102, 71}, {102, 80}}, color = {0, 127, 255}));
-  connect(fluid_tot.X, fluid2Eng.X_in) annotation(
-    Line);
-  connect(fluid_tot.T, fluid2Eng.T_in) annotation(
-    Line);
-  connect(fluid_tot.p, fluid2Eng.p_in) annotation(
-    Line);
+  fluid2Eng.X_in = fluid_tot.X;
+  fluid2Eng.T_in = fluid_tot.T;
+  fluid2Eng.p_in = fluid_tot.p;
 //-- fluid_Amb --
   connect(fluidAmb.ports[1], port_fluidAmb) annotation(
     Line(points = {{0, 60}, {0, 60}, {0, 100}, {0, 100}}, color = {0, 127, 255}, thickness = 0.5));
-  connect(fluid_amb.p, fluidAmb.p_in) annotation(
-    Line);
-  connect(fluid_amb.T, fluidAmb.T_in) annotation(
-    Line);
-  connect(fluid_amb.X, fluidAmb.X_in) annotation(
-    Line);
+  fluidAmb.p_in = fluid_amb.p;
+  fluidAmb.T_in = fluid_amb.T;
+  fluidAmb.X_in = fluid_amb.X;
 //-- fluid_tot --
 //********** Geometries **********
 //##### none #####
@@ -210,14 +204,14 @@ equation
 // troposphere, temperature gradient layer model
     TambStd = T_ground - 0.0064878 * (alt - alt_ground);
     Tamb = TambStd + dTamb;
-    pAmbStd = p_ground * (TambStd / T_ground) ^ (-1.0 * gAccel / (LapseR1 * fluid_ambStd.R));
-    pAmb = p_ground * (Tamb / T_ground) ^ (-1.0 * gAccel / (LapseR1 * fluid_amb.R));
+    pAmbStd = p_ground * (TambStd / T_ground) ^ (-1.0 * gAccel / (LapseR1 * 287.058));
+    pAmb = p_ground * (Tamb / T_ground) ^ (-1.0 * gAccel / (LapseR1 * 287.058));
   elseif alt_UpBdTropos <= alt and alt < alt_UpBdStratos then
 // stratosphere, temperature is constant
     TambStd = T_UpBdTropos;
     Tamb = TambStd + dTamb;
-    pAmbStd = p_UpBdTropos * exp(-1.0 * gAccel / (fluid_ambStd.R * TambStd) * (alt - T_UpBdTropos));
-    pAmb = p_UpBdTropos * exp(-1.0 * gAccel / (fluid_amb.R * Tamb) * (alt - T_UpBdTropos));
+    pAmbStd = p_UpBdTropos * exp(-1.0 * gAccel / (287.058 * TambStd) * (alt - T_UpBdTropos));
+    pAmb = p_UpBdTropos * exp(-1.0 * gAccel / (287.058 * Tamb) * (alt - T_UpBdTropos));
   end if;
 // set fluid station states
   fluid_ambStd.state = Medium.setState_pTX(pAmbStd, TambStd, XambStd);

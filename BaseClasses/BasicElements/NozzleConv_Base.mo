@@ -54,8 +54,8 @@ partial model NozzleConv_Base
   Modelica.Units.SI.Velocity V_2(start = 10);
   Modelica.Units.SI.Velocity V_2is(start = 10);
   Real PR(start = 2.0);
-  Real CdTh(start = CdThDes);
-  Real Cv(start = CvDes);
+  Real CdTh(start = 0.99);
+  Real Cv(start = 0.99);
   Modelica.Units.SI.SpecificEnthalpy h_2is "";
   Modelica.Units.SI.Force Fg "";
   //-----
@@ -192,10 +192,8 @@ equation
 //--- throat, static, p, T ---
   fluidStat_th_fullExp.p = fluid_2.p;
   fluidStat_th_choked.p= fluid_2.p;
-/*
-  //--- fully-expanded ---
-  fluidStat_th_fullExp.h = Medium.isentropicEnthalpy(fluidStat_th_fullExp.p, fluid_1.state);
-  */
+//--- fully-expanded ---
+  fluidStat_th_fullExp.h = Medium.isentropicEnthalpy(noEvent(if fluidStat_th_fullExp.p > 0.0 then fluidStat_th_fullExp.p else -1.0*fluidStat_th_fullExp.p), fluid_1.state);
 //V_th_fullExp= sqrt( 2.0*(fluid_1.h - fluidStat_th_fullExp.h ) );
   fluid_1.h - fluidStat_th_fullExp.h = 1.0 / 2.0 * (sign(V_th_fullExp) * abs(V_th_fullExp) ^ 2.0);
 //--- velocity if choked state ---
@@ -227,66 +225,10 @@ equation
     Fg = Cv * V_th * dmTh + (fluidStat_th.p - fluid_2.p) * AeTh;
   end if;
 //********** reinit invalid state variables **********
-  
-  when fluidStat_th_fullExp.p <= 0.0 then
-    reinit(fluidStat_th_fullExp.p, -1.0 * fluidStat_th_fullExp.p);
-  end when;
-  
-  when(fluidStat_th.p<=0.0)then
-    reinit(fluidStat_th.p, -1.0*fluidStat_th.p);
-  end when;
+  // removed: reinit on fluidStat_th.p / fluidStat_th_fullExp.p
+  // OCT cannot select algebraic pressure as state
   
     
-algorithm
-  
-  assert(fluid_1.h < fluidStat_th_fullExp.h, 
-      "nozzle inverse flow condition, fluid_1.h < fluidStat_th_fullExp.h"+"\n"
-      +", fluid_1.h="+String(fluid_1.h)+", fluidStat_th_fullExp.h="+String(fluidStat_th_fullExp.h),
-      AssertionLevel.warning);
-  
-  /*
-  //--- isentropic expansion ---
-  if((0.0<=fluid_2.p)and(0.0<=fluid_1.state.p))then
-    
-    h_2is:= Medium.isentropicEnthalpy(fluid_2.p, fluid_1.state);
-    
-  elseif((fluid_2.p<0.0)and(fluid_1.state.p<0.0))then
-    
-    h_2is:= Medium.isentropicEnthalpy(fluid_2.p, fluid_1.state);
-    
-  else
-    h_2is:= Medium.isentropicEnthalpy(-1.0*fluid_2.p, fluid_1.state);
-  end if;
-  */
-//--- throat fully-expanded ---
-  if((0.0<fluidStat_th_fullExp.p)and(0.0<fluid_1.state.p))then
-    
-    fluidStat_th_fullExp.h:= Medium.isentropicEnthalpy(fluidStat_th_fullExp.p, fluid_1.state);
-    
-  elseif((fluidStat_th_fullExp.p<0.0)and(fluid_1.state.p<0.0))then
-    
-    fluidStat_th_fullExp.h:= Medium.isentropicEnthalpy(fluidStat_th_fullExp.p, fluid_1.state);
-    
-  else
-    fluidStat_th_fullExp.h:= Medium.isentropicEnthalpy(-1.0*fluidStat_th_fullExp.p, fluid_1.state);
-  end if;
-  
-  /*
-  //--- throat ---
-  if((0.0<fluidStat_th.p)and(0.0<fluid_1.state.p))then
-    
-    fluidStat_th.h:= Medium.isentropicEnthalpy(fluidStat_th.p, fluid_1.state);
-    
-  elseif((fluidStat_th.p<0.0)and(fluid_1.state.p<0.0))then
-    
-    fluidStat_th.h:= Medium.isentropicEnthalpy(fluidStat_th.p, fluid_1.state);
-    
-  else
-    fluidStat_th.h:= Medium.isentropicEnthalpy(-1.0*fluidStat_th.p, fluid_1.state);
-  end if;
-  */
-  
-  
 initial equation
   port_1.m_flow=dmTh;
     

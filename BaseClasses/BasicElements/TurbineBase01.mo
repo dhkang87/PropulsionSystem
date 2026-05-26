@@ -240,17 +240,8 @@ equation
     reinit(Nc_1, Nc_1_init);
   end when;
   
-  when (noEvent(fluid_1.p<Modelica.Constants.small)) then
-    reinit(fluid_1.p, p1_init);
-  end when;
-  
-  when (noEvent(fluid_1.T<Modelica.Constants.small)) then
-    reinit(fluid_1.T, T1_init);
-  end when;
-  
-  when (noEvent(fluid_1.h<Modelica.Constants.small)) then
-    reinit(fluid_1.h, h1_init);
-  end when;
+  // removed: reinit on fluid_1.p, fluid_1.T, fluid_1.h
+  // OCT cannot select algebraic BaseProperties variables as states
 /* ---------------------------------------------
     Connections, interface <-> internal variables
   --------------------------------------------- */

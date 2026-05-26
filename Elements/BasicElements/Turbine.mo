@@ -75,6 +75,11 @@ model Turbine
     "" annotation(
     Placement(visible = true, transformation(origin = {-60, -112}, extent = {{-12, -12}, {12, 12}}, rotation = 90), iconTransformation(origin = {30, -73}, extent = {{-8, -8}, {8, 8}}, rotation = 90)));
   
+  Modelica.Blocks.Interfaces.RealInput PR_in
+    if(switchInput_PR == PropulsionSystem.Types.switches.switch_parameter_input.use_inputSignal)
+    "" annotation(
+    Placement(visible = true, transformation(origin = {-40, -112}, extent = {{-12, -12}, {12, 12}}, rotation = 90), iconTransformation(origin = {-30, -58}, extent = {{-8, -8}, {8, 8}}, rotation = 90)));
+  
   
   //********** Initialization **********
   //##### none #####

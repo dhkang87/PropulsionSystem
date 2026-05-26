@@ -254,7 +254,7 @@ algorithm
   pwr := pwrSingle * numBlade;
   
   pwrPropulsive:= Fax*c1;
-  Nmech := Modelica.Units.NonSI.to_rpm(omega);
+  Nmech := omega * 60.0 / (2.0 * Modelica.Constants.pi);
   FliftqFdrag:= Flift/Fdrag;
   FaxqFtheta:= Fax/Ftheta;
   effPropeller:= pwrPropulsive/pwr;
@@ -284,9 +284,7 @@ initial equation
 // NONE
 equation
   //********** reinit invalid state variables **********
-  when(m_flow<0.0)then
-    reinit(m_flow, -1.0*m_flow);
-  end when;
+  // removed: reinit(m_flow) - OCT cannot select algebraic variable as state
   
   //********** interface **********
   //-- fluidPort_1 --
@@ -301,10 +299,9 @@ equation
   flange_2.phi = phi;
   
   //-- internal components --
-  connect(inci1, airfoilSimple001.signalBus1.alpha) annotation(
-    Line);
-  CL = airfoilSimple001.signalBus2.Cl;
-  CD = airfoilSimple001.signalBus2.Cd;
+  airfoilSimple001.alpha = inci1;
+  CL = airfoilSimple001.Cl;
+  CD = airfoilSimple001.Cd;
 //********** physical equations **********
 //-- energy conservation --
   trq = flange_1.tau + flange_2.tau;
@@ -332,9 +329,9 @@ equation
   
   
   //********** flag variables **********
-  if(alpha4ClmaxDes<airfoilSimple001.signalBus1.alpha)then
+  if(alpha4ClmaxDes<inci1)then
     flagBladeStall=true;
-  elseif(airfoilSimple001.signalBus1.alpha<alpha4ClminDes)then
+  elseif(inci1<alpha4ClminDes)then
     flagBladeStall=true;
   else
     flagBladeStall=false;

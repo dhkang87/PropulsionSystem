@@ -133,19 +133,8 @@ equation
 //********** Eqns describing physics **********
   NqNdes = Nmech / NmechDes;
 //********** reinit invalid state variables **********
-  
-  when fluid_1.state.p <= 0.0 then
-    reinit(fluid_1.state.p, -1.0 * fluid_1.state.p);
-  end when;
-  when fluid_2.state.p <= 0.0 then
-    reinit(fluid_2.state.p, -1.0 * fluid_2.state.p);
-  end when;
-  when fluid_1.p <= 0.0 then
-    reinit(fluid_1.p, -1.0 * fluid_1.p);
-  end when;
-  when fluid_2.p <= 0.0 then
-    reinit(fluid_2.p, -1.0 * fluid_2.p);
-  end when;
+  // removed: reinit on fluid_X.p / fluid_X.state.p
+  // OCT cannot select algebraic pressure as state
   
 
   pwr_inv= -1*pwr;
