@@ -17,6 +17,7 @@ model TurboProp_TPE331_ex01b
     redeclare package Medium = engineAir,
     alt_paramInput = 0.0,
     MN_paramInput = 0.0,
+    X_fluid_paramInput = {1.0e-8, 0.768, 0.232 - 1.0e-8},
     printCmd = false) annotation(
     Placement(visible = true, transformation(origin = {-180, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   PropulsionSystem.Elements.BasicElements.InltCharFixed00 Inlt(
@@ -51,20 +52,34 @@ model TurboProp_TPE331_ex01b
   PropulsionSystem.Sources.MassFlowSource_T FuelSrc(
     redeclare package Medium = engineAir,
     T = 400,
-    X = {1, 0, 0},
+    X = {1.0 - 2.0e-8, 1.0e-8, 1.0e-8},
     nPorts = 1,
     use_T_in = false,
     use_m_flow_in = true) annotation(
     Placement(visible = true, transformation(origin = {-20, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
-  //  Turbine (single, 3-stage axial) — PR=8, eff=0.87
+  //  Turbine (single, 3-stage axial) — map-based, PR determined by Wc balance
   //  Full expansion in single-shaft TPE331
   //========================================================================
-  PropulsionSystem.Elements.BasicElements.TrbCharFixed00 Trb(
+  PropulsionSystem.Elements.BasicElements.TrbCharTable00 Trb(
     redeclare package Medium = engineAir,
-    switchDetermine_PR = PropulsionSystem.Types.switches.switchHowToDetVar.param,
+    NmechDes_paramInput = 41730.0,
     PRdes_paramInput = 8.0,
-    effDes_paramInput = 0.87) annotation(
+    effDes_paramInput = 0.87,
+    m_flow_1_des_paramInput = 8.0,
+    p1_des_paramInput = 101325.0 * 10.0,
+    T1_des_paramInput = 1200.0,
+    NcTblDes_paramInput = 1.0,
+    PRtblDes_paramInput = 5.5,
+    Nmech_init_paramInput = 41730.0,
+    m_flow1_init_paramInput = 8.0,
+    p1_init_paramInput = 101325.0 * 10.0,
+    T1_init_paramInput = 1200.0,
+    eff_init_paramInput = 0.87,
+    use_tableFile_Wc = true,
+    use_tableFile_eff = true,
+    pathName_tableFileInSimExeDir = "./tableData/table_Turbine_WcEff_NcPR_TPE331_Trb.txt",
+    pathName_tableFileInLibPackage = "modelica://PropulsionSystem/tableData/table_Turbine_WcEff_NcPR_TPE331_Trb.txt") annotation(
     Placement(visible = true, transformation(origin = {100, -80}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   //========================================================================
   //  Exhaust nozzle
@@ -84,7 +99,7 @@ model TurboProp_TPE331_ex01b
   Modelica.Mechanics.Rotational.Components.Inertia Shaft(
     J = 0.5,
     phi(fixed = true, start = 0),
-    w(fixed = true, start = 25000.0 * 2 * Modelica.Constants.pi / 60)) "Start at 25000 rpm (Nc=0.60), accelerate to design" annotation(
+    w(fixed = true, start = 41730.0 * 2 * Modelica.Constants.pi / 60)) "Start at design 41730 rpm" annotation(
     Placement(visible = true, transformation(origin = {20, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
   //  Propeller load (referred to turbine shaft via gear ratio)
@@ -96,19 +111,19 @@ model TurboProp_TPE331_ex01b
   Modelica.Mechanics.Rotational.Sources.Torque PropLoad annotation(
     Placement(visible = true, transformation(origin = {20, -120}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
   Modelica.Blocks.Sources.Ramp ramp_PropTorque(
-    height = -120,
+    height = -50,
     duration = 10,
-    offset = -10,
-    startTime = 30) "PropLoad: -10 (start) -> -130 N.m (cruise) after shaft reaches design" annotation(
+    offset = -80,
+    startTime = 5) "PropLoad: -80 -> -130 N.m (load step near design)" annotation(
     Placement(visible = true, transformation(origin = {-20, -140}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
   //  Fuel flow command (constant then ramp)
   //========================================================================
   Modelica.Blocks.Sources.Ramp ramp_m_flow_fuel(
-    height = 0.045,
-    duration = 25,
-    offset = 0.020,
-    startTime = 2) "Fuel: 0.020 -> 0.065 kg/s over 25s (start-up acceleration)" annotation(
+    height = 0.010,
+    duration = 10,
+    offset = 0.055,
+    startTime = 2) "Fuel: 0.055 -> 0.065 kg/s (near design, observe droop)" annotation(
     Placement(visible = true, transformation(origin = {-60, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   //========================================================================
   //  Sensors

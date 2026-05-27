@@ -2,11 +2,11 @@ within PropulsionSystem.Elements.BasicElements;
 
 model TrbCharTable00
   extends PropulsionSystem.BaseClasses.BasicElements.TurbineBaseDefDesPt00(
-    m_flow1_init=m_flow_1_des_paramInput,
-    p1_init=p1_des_paramInput,
-    T1_init=T1_des_paramInput,
-    Nmech_init=NmechDes_paramInput,
-    eff_init=effDes_paramInput
+    m_flow1_init=m_flow1_init_paramInput,
+    p1_init=p1_init_paramInput,
+    T1_init=T1_init_paramInput,
+    Nmech_init=Nmech_init_paramInput,
+    eff_init=eff_init_paramInput
   );
   
   /********************************************************
@@ -82,6 +82,17 @@ model TrbCharTable00
     Dialog(group = "Component sizing"));
   parameter Real PRtblDes_paramInput = 2.0 "design point definition on table" annotation(
     Dialog(group = "Component sizing"));
+  //--- Initialization (defaults to design point, override for off-design start) ---
+  parameter units.MassFlowRate m_flow1_init_paramInput = m_flow_1_des_paramInput "init mass flow (override for startup)" annotation(
+    Dialog(group = "Initialization"));
+  parameter units.Pressure p1_init_paramInput = p1_des_paramInput "init inlet pressure (override for startup)" annotation(
+    Dialog(group = "Initialization"));
+  parameter units.Temperature T1_init_paramInput = T1_des_paramInput "init inlet temperature (override for startup)" annotation(
+    Dialog(group = "Initialization"));
+  parameter unitsNonSI.AngularVelocity_rpm Nmech_init_paramInput = NmechDes_paramInput "init shaft speed [rpm] (override for startup)" annotation(
+    Dialog(group = "Initialization"));
+  parameter Real eff_init_paramInput = effDes_paramInput "init efficiency (override for startup)" annotation(
+    Dialog(group = "Initialization"));
   //----------
   parameter String pathName_tableFileInSimExeDir = "./tableData/table_Turbine_WcEff_NcPR00.txt" "relative path under sim. exe. file directory" annotation(
     Dialog(group = "table file read setting"));

@@ -1,0 +1,27 @@
+// OpenModelica simulation script for TurboProp_TPE331_ex01b
+// Run: omc sim_ex01b_omc.mos
+
+// Load dependencies
+loadModel(Modelica); getErrorString();
+loadModel(ModelicaServices); getErrorString();
+
+// Load FluidSystemComponents (dependency)
+loadFile("D:/KangDH/ModelicaLib/FluidSystemComponents/package.mo"); getErrorString();
+
+// Load PropulsionSystem
+loadFile("D:/KangDH/ModelicaLib/PropulsionSystem/package.mo"); getErrorString();
+
+// Check model
+checkModel(PropulsionSystem.Examples.Engines.Transient.TurboProp_TPE331_ex01b); getErrorString();
+
+// Simulate
+simulate(
+  PropulsionSystem.Examples.Engines.Transient.TurboProp_TPE331_ex01b,
+  startTime = 0,
+  stopTime = 60,
+  numberOfIntervals = 3000,
+  tolerance = 1e-6,
+  method = "dassl",
+  outputFormat = "csv",
+  simflags = "-lv=LOG_INIT,LOG_NLS"
+); getErrorString();
