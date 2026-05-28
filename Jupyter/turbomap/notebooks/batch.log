@@ -1,0 +1,9 @@
+ 
+Ansys Electronics Desktop Version 2026.1.0, Build: 2026-02-02 02:17:35
+Location: C:\Program Files\ANSYS Inc\v261\AnsysEM\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 11:30:36 PM  May 28, 2026
+Running as user : 2020-2-WORK-B\user
+Temp directory: C:\Users\user\AppData\Local\Temp
+Project directory: C:\Users\user\Documents\Ansoft
+[error] Project "GT_Engine" cannot be closed/deleted because it is in use by another application.

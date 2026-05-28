@@ -256,6 +256,8 @@ class TBPostProcessor:
         self._tb: Any = None
         self._all_exprs: list[str] = []
         self._selected: dict[str, tuple[str, str]] = {}  # expr → (suffix, desc)
+        self._suffix_to_expr: dict[str, str] = {}  # suffix → current full expr
+        self._exp_prefix: str = ""
         self._setup_name: str = "TR"
         self.mdf: pd.DataFrame | None = None
 
@@ -295,6 +297,11 @@ class TBPostProcessor:
         self._all_exprs = self._collect_all_expressions(post, solutions)
         print(f"Total expressions: {len(self._all_exprs)}")
 
+        # Detect experiment prefix (e.g. "ExpTurboProp_TPE331_ex1a1")
+        self._exp_prefix = self._detect_prefix(self._all_exprs)
+        if self._exp_prefix:
+            print(f"Experiment prefix: '{self._exp_prefix}'")
+
         # Filter
         exclude_re = re.compile("|".join(EXCLUDE_PATTERNS), re.IGNORECASE)
         filtered = [e for e in self._all_exprs if not exclude_re.search(e)]
@@ -307,8 +314,29 @@ class TBPostProcessor:
             if suffix:
                 self._selected[expr] = (suffix, desc)
 
+        # Build suffix → expr lookup for fallback resolution
+        self._suffix_to_expr: dict[str, str] = {}
+        for expr, (suffix, _) in self._selected.items():
+            # Keep first match per suffix (avoid overwrites for duplicates)
+            if suffix not in self._suffix_to_expr:
+                self._suffix_to_expr[suffix] = expr
+
         print(f"Selected key signals: {len(self._selected)}")
         return list(self._selected.keys())
+
+    @staticmethod
+    def _detect_prefix(exprs: list[str]) -> str:
+        """Extract common experiment prefix (text before first '.')."""
+        prefixes: dict[str, int] = {}
+        for e in exprs:
+            dot = e.find(".")
+            if dot > 0:
+                pfx = e[:dot]
+                prefixes[pfx] = prefixes.get(pfx, 0) + 1
+        if not prefixes:
+            return ""
+        # Return the most common prefix
+        return max(prefixes, key=prefixes.get)
 
     # ── Data collection ─────────────────────────────────────────────────
 
@@ -317,6 +345,40 @@ class TBPostProcessor:
         exprs = expressions or list(self._selected.keys())
         if not exprs:
             raise ValueError("No signals to collect. Run discover_signals() first.")
+
+        # ── Pre-check: test first 3 signals to see if data is actually available ──
+        n_probe = min(3, len(exprs))
+        probe_ok = 0
+        for i in range(n_probe):
+            t, _ = self._get_signal(exprs[i], verbose=True)
+            if t is not None:
+                probe_ok += 1
+
+        if probe_ok == 0:
+            # ── Stale detection: expression names may have changed ──
+            print(f"⚠ Pre-check failed: first {n_probe} signals returned no data.")
+            print(f"  → Re-discovering signals (model/experiment name may have changed)...")
+            old_prefix = getattr(self, "_exp_prefix", "")
+            self.discover_signals()
+            new_prefix = getattr(self, "_exp_prefix", "")
+            if new_prefix != old_prefix:
+                print(f"  ✓ Prefix changed: '{old_prefix}' → '{new_prefix}'")
+            exprs = list(self._selected.keys())
+            if not exprs:
+                print("  ✗ Still no signals after re-discovery.")
+                self.mdf = pd.DataFrame()
+                return self.mdf
+            # Re-probe after re-discovery
+            probe_ok = 0
+            for i in range(min(3, len(exprs))):
+                t, _ = self._get_signal(exprs[i], verbose=True)
+                if t is not None:
+                    probe_ok += 1
+            if probe_ok == 0:
+                print(f"  ✗ Still no data after re-discovery.")
+                print(f"  → Run pp._tb.analyze() or re-simulate in Twin Builder.")
+                self.mdf = pd.DataFrame()
+                return self.mdf
 
         merged = None
         found, missing = [], []
@@ -502,6 +564,377 @@ class TBPostProcessor:
         plt.tight_layout()
         plt.show()
         return fig
+
+    # ── Operating trajectory on map plane ──────────────────────────────
+
+    def plot_operating_trajectory(
+        self,
+        T_ref: float = 288.15,
+        p_ref: float = 101325.0,
+        title: str | None = None,
+        cmp_map: dict | None = None,
+        trb_map: dict | None = None,
+        NmechDes: float = 41730.0,
+        cmp_design: dict | None = None,
+        trb_design: dict | None = None,
+    ):
+        """
+        Plot compressor and turbine operating trajectories on map-style planes.
+
+        If cmp_map / trb_map are provided, draws background map contours
+        (surge/choke lines, Nc iso-lines, efficiency) with trajectory overlay.
+        Otherwise draws trajectory only.
+
+        Parameters
+        ----------
+        T_ref, p_ref : float
+            ISA reference conditions for correcting quantities.
+        title : str or None
+            Overall figure title.
+        cmp_map : dict or None
+            Scaled compressor map dict (from scale_compressor_map) with keys:
+            'wc_scaled_corr', 'pr_scaled', 'eta_scaled', 'nc', 'wc_target_corr'.
+            If provided, draws compressor map background.
+        trb_map : dict or None
+            Scaled turbine map dict (e.g. {"Trb": {...}}) compatible with
+            plot_turbine_maps_2x2. If provided, draws turbine map background.
+        NmechDes : float
+            Design mechanical speed [rpm] for map contour labels.
+        cmp_design : dict or None
+            Compressor design conditions for Wc correction, e.g.
+            {"T1_des": 288.15, "p1_des": 101325, "PRdes": 10.0}.
+            If actual→corrected correction is needed, these are used.
+        trb_design : dict or None
+            Turbine design conditions for Wc correction, e.g.
+            {"T1_des": 1100, "p1_des": 400000}.
+            Used for static Wc correction fallback.
+        """
+        import matplotlib.pyplot as plt
+        from matplotlib.collections import LineCollection
+        from matplotlib.colors import Normalize
+
+        if self.mdf is None or self.mdf.empty:
+            raise ValueError("No data. Run collect_signals() first.")
+
+        mdf = self.mdf
+        t = mdf["time"].to_numpy(dtype=float)
+        fc = self.find_col
+        sm = self.signal_map
+        stations = sm.stations
+
+        # ── Strategy 1: Direct map outputs (Modelica) ──
+        col_Wc_cmp = fc(sm.Wc_cmp)
+        col_PR_cmp = fc(sm.PR_cmp)
+        col_Nc_cmp = fc(sm.Nc_cmp)
+        col_eff_cmp = fc(sm.eff_cmp)
+
+        col_PR_trb = fc(sm.PR_trb)
+        col_eff_trb = fc(sm.eff_trb)
+        col_Wc_trb = fc(["Trb_Wc_1", "Trb_Wc", "GGT_Wc_1", "GGT_Wc", "FPT_Wc_1"])
+
+        has_cmp_direct = bool(col_Wc_cmp and col_PR_cmp)
+        has_trb_direct = bool(col_Wc_trb and col_PR_trb)
+
+        # ── Strategy 2: Station-derived (VHDL-AMS / fallback) ──
+        p_in_col = fc(stations.get("1 (Inlet)", {}).get("p_patterns", []))
+        p_cmp_out_col = fc(stations.get("2 (Cmp exit)", {}).get("p_patterns", []))
+        T_in_col = fc(stations.get("1 (Inlet)", {}).get("T_patterns", []))
+        p_trb_in_col = fc(stations.get("3 (TIT)", {}).get("p_patterns", []))
+        p_trb_out_col = fc(stations.get("4 (Trb exit)", {}).get("p_patterns", []))
+        T_trb_in_col = fc(stations.get("3 (TIT)", {}).get("T_patterns", []))
+        col_omega = fc(sm.omega) or fc(sm.Nmech)
+
+        has_cmp_derived = bool(p_in_col and p_cmp_out_col and T_in_col and col_omega)
+        has_trb_derived = bool(p_trb_in_col and p_trb_out_col and T_trb_in_col)
+
+        has_cmp = has_cmp_direct or has_cmp_derived
+        has_trb = has_trb_direct or has_trb_derived
+
+        # When a specific map is requested, suppress the other component's fallback plot
+        if cmp_map is not None and trb_map is None:
+            has_trb = False
+        if trb_map is not None and cmp_map is None:
+            has_cmp = False
+
+        if not has_cmp and not has_trb:
+            print("Insufficient signals for operating trajectory.")
+            print(f"  [Direct] Wc_cmp={col_Wc_cmp}, PR_cmp={col_PR_cmp}, Wc_trb={col_Wc_trb}, PR_trb={col_PR_trb}")
+            print(f"  [Derived] p_in={p_in_col}, p_cmp_out={p_cmp_out_col}, T_in={T_in_col}, omega={col_omega}")
+            print(f"  [Derived] p_trb_in={p_trb_in_col}, p_trb_out={p_trb_out_col}, T_trb_in={T_trb_in_col}")
+            return None
+
+        fig_title = title or f"{self.design} — Operating Trajectory"
+        norm = Normalize(vmin=t[0], vmax=t[-1])
+
+        # ── If trb_map provided with background, use plot_turbine_maps_2x2 layout ──
+        # Otherwise create simple subplot layout
+        use_trb_bg = has_trb and trb_map is not None
+
+        if use_trb_bg:
+            # Import plot functions
+            try:
+                from turbomap_plot_utils import plot_turbine_maps_2x2
+            except ImportError:
+                use_trb_bg = False
+
+        # Determine which components get their own map figure
+        cmp_uses_own_fig = cmp_map is not None and has_cmp_direct
+        trb_uses_own_fig = use_trb_bg and has_trb_direct
+
+        # Base figure only for components WITHOUT a dedicated map figure
+        n_base_cmp = int(has_cmp and not cmp_uses_own_fig)
+        n_base_trb = int(has_trb and not trb_uses_own_fig)
+        ncols = n_base_cmp + n_base_trb
+
+        if ncols > 0:
+            fig, axes = plt.subplots(1, ncols, figsize=(7 * ncols, 6))
+            if ncols == 1:
+                axes = [axes]
+            fig.suptitle(fig_title, fontsize=13)
+        else:
+            fig = None
+            axes = []
+
+        # ══════ COMPRESSOR ══════
+        if has_cmp:
+            # Get trajectory data
+            if has_cmp_direct:
+                Wc_sim = mdf[col_Wc_cmp].to_numpy(dtype=float)
+                PR_sim = mdf[col_PR_cmp].to_numpy(dtype=float)
+                # ── Wc correction: actual → corrected flow if needed ──
+                if cmp_map is not None:
+                    wc_target = cmp_map.get("wc_target_corr", 1.0)
+                    wc_ratio = Wc_sim.mean() / wc_target if wc_target > 0 else 1.0
+                    if wc_ratio > 5 and cmp_design is not None:
+                        from turbomap_data_utils import T_REF, P_REF
+                        corr = (np.sqrt(cmp_design["T1_des"] / T_REF)
+                                / (cmp_design["p1_des"] / P_REF))
+                        Wc_sim = Wc_sim * corr
+                        print(f"  ⚠ Cmp Wc actual→corrected: factor={corr:.4f}")
+            else:
+                p_in = mdf[p_in_col].to_numpy(dtype=float)
+                p_out = mdf[p_cmp_out_col].to_numpy(dtype=float)
+                T_in = mdf[T_in_col].to_numpy(dtype=float)
+                omega = mdf[col_omega].to_numpy(dtype=float)
+                theta = np.clip(T_in / T_ref, 0.5, 3.0)
+                Wc_sim = (omega * 60 / (2 * np.pi)) / np.sqrt(theta)  # Nc as x
+                PR_sim = np.where(p_in > 0, p_out / p_in, 1.0)
+
+            if cmp_map is not None and has_cmp_direct:
+                # ── Background map + trajectory overlay ──
+                try:
+                    from turbomap_plot_utils import plot_compressor_map
+                    PRdes = (cmp_design or {}).get("PRdes", cmp_map.get("pr_scaled", [[1]])[0][-1])
+                    design_pt = {"Wc": cmp_map.get("wc_target_corr", 8.0), "PR": PRdes}
+                    # Use PRdes from target if available
+                    if "pr_scaled" in cmp_map:
+                        fig_c, ax_c = plot_compressor_map(
+                            cmp_map["wc_scaled_corr"],
+                            cmp_map["pr_scaled"],
+                            cmp_map["eta_scaled"],
+                            cmp_map["nc"],
+                            NmechDes=NmechDes,
+                            design_point=design_pt,
+                            title=f"{fig_title} — Compressor",
+                        )
+                    else:
+                        fig_c, ax_c = plt.subplots(1, 1, figsize=(8, 6))
+                        ax_c.set_title(f"{fig_title} — Compressor")
+                except (ImportError, Exception):
+                    fig_c, ax_c = plt.subplots(1, 1, figsize=(8, 6))
+                    ax_c.set_title(f"{fig_title} — Compressor")
+                    ax_c.grid(True, alpha=0.3)
+
+                # Scatter trajectory
+                sc = ax_c.scatter(Wc_sim, PR_sim, c=t, cmap="plasma", s=8,
+                                  zorder=5, alpha=0.7, edgecolors="none")
+                plt.colorbar(sc, ax=ax_c, shrink=0.8, pad=0.02, label="Time [s]")
+                ax_c.plot(Wc_sim[0], PR_sim[0], "g^", ms=12, zorder=6,
+                          label=f"t={t[0]:.1f}s (start)")
+                ax_c.plot(Wc_sim[-1], PR_sim[-1], "rs", ms=12, zorder=6,
+                          label=f"t={t[-1]:.1f}s (end)")
+                ax_c.legend(loc="lower right", fontsize=9)
+
+                # Auto-scale to include both map and trajectory
+                all_wc = np.concatenate([cmp_map["wc_scaled_corr"].ravel(), Wc_sim])
+                all_pr = np.concatenate([cmp_map["pr_scaled"].ravel(), PR_sim])
+                ax_c.set_xlim(all_wc.min() * 0.9, all_wc.max() * 1.1)
+                ax_c.set_ylim(max(0.5, all_pr.min() * 0.9), all_pr.max() * 1.1)
+
+                plt.show()
+                print(f"✓ Cmp trajectory: Wc={Wc_sim[0]:.2f}→{Wc_sim[-1]:.2f}, "
+                      f"PR={PR_sim[0]:.2f}→{PR_sim[-1]:.2f}")
+            else:
+                # ── Trajectory only (no map background) ──
+                ax = axes[0]
+                if has_cmp_direct:
+                    x_label = "Corrected Flow Wc [kg/s]"
+                    y_label = "Pressure Ratio PR [-]"
+                    sub_title = "Compressor: Wc vs PR"
+                else:
+                    x_label = "Corrected Speed Nc [rpm]"
+                    y_label = "Pressure Ratio PR [-]"
+                    sub_title = "Compressor: Nc vs PR (derived)"
+
+                self._draw_colored_trajectory(
+                    ax, Wc_sim, PR_sim, t, norm, x_label, y_label, sub_title)
+
+                if col_eff_cmp and col_eff_cmp in mdf.columns:
+                    eta = mdf[col_eff_cmp].to_numpy(dtype=float)
+                    n_ss = max(1, int(len(eta) * 0.1))
+                    eta_ss = np.mean(eta[-n_ss:])
+                    ax.annotate(
+                        f"η_ss={eta_ss:.3f}",
+                        xy=(np.mean(Wc_sim[-n_ss:]), np.mean(PR_sim[-n_ss:])),
+                        xytext=(10, 10), textcoords="offset points",
+                        fontsize=9, color="purple",
+                        arrowprops=dict(arrowstyle="->", color="purple"),
+                    )
+
+        # ══════ TURBINE ══════
+        if has_trb:
+            # Get trajectory data
+            if has_trb_direct:
+                Wc_trb_raw = mdf[col_Wc_trb].to_numpy(dtype=float)
+                PR_trb_sim = mdf[col_PR_trb].to_numpy(dtype=float)
+                Eta_trb_sim = (mdf[col_eff_trb].to_numpy(dtype=float)
+                               if col_eff_trb and col_eff_trb in mdf.columns else None)
+
+                # ── Wc correction: actual → corrected if needed ──
+                trb_key = next(iter(trb_map), None) if trb_map else None
+                wc_map_des = (trb_map[trb_key].get("wc_target_corr", 1.0)
+                              if trb_key else 1.0)
+                wc_ratio = (Wc_trb_raw.mean() / wc_map_des
+                            if wc_map_des > 0 else 1.0)
+                if wc_ratio > 3:
+                    from turbomap_data_utils import T_REF, P_REF
+                    # Try dynamic correction using turbine T1/p1 signals
+                    col_Trb_T1 = fc(["Trb_port_1_T", "Trb_fluid_1_T",
+                                     "Comb_port_2_T", "Trb_T_1"])
+                    col_Trb_p1 = fc(["Trb_port_1_p", "Trb_fluid_1_p",
+                                     "Comb_port_2_p", "Trb_p_1"])
+                    if col_Trb_T1 and col_Trb_p1:
+                        T1_sim = mdf[col_Trb_T1].to_numpy(dtype=float)
+                        p1_sim = mdf[col_Trb_p1].to_numpy(dtype=float)
+                        corr_dyn = np.sqrt(T1_sim / T_REF) / (p1_sim / P_REF)
+                        Wc_trb_sim = Wc_trb_raw * corr_dyn
+                        print(f"  ✓ Trb Wc dynamic correction (T1, p1)")
+                    elif trb_design is not None:
+                        corr_st = (np.sqrt(trb_design["T1_des"] / T_REF)
+                                   / (trb_design["p1_des"] / P_REF))
+                        Wc_trb_sim = Wc_trb_raw * corr_st
+                        print(f"  ⚠ Trb Wc static correction: factor={corr_st:.4f}")
+                    else:
+                        Wc_trb_sim = Wc_trb_raw
+                else:
+                    Wc_trb_sim = Wc_trb_raw
+            else:
+                p_trb_in = mdf[p_trb_in_col].to_numpy(dtype=float)
+                p_trb_out = mdf[p_trb_out_col].to_numpy(dtype=float)
+                T_trb_in = mdf[T_trb_in_col].to_numpy(dtype=float)
+                PR_trb_sim = np.where(p_trb_out > 0, p_trb_in / p_trb_out, 1.0)
+                theta_trb = np.clip(T_trb_in / T_ref, 0.5, 8.0)
+                if col_omega and col_omega in mdf.columns:
+                    omega = mdf[col_omega].to_numpy(dtype=float)
+                    Wc_trb_sim = (omega * 60 / (2 * np.pi)) / np.sqrt(theta_trb)
+                else:
+                    Wc_trb_sim = np.sqrt(theta_trb)
+                Eta_trb_sim = None
+
+            if use_trb_bg and has_trb_direct:
+                # ── Background turbine map + trajectory overlay ──
+                fig_t, axes_t = plot_turbine_maps_2x2(
+                    trb_map,
+                    suptitle=f"{fig_title} — Turbine",
+                    NmechDes_dict={k: NmechDes for k in trb_map},
+                )
+                # Overlay on first turbine's axes (col=0)
+                ax_wc = axes_t[0, 0]
+                ax_eta = axes_t[1, 0]
+
+                sc_wc = ax_wc.scatter(PR_trb_sim, Wc_trb_sim, c=t, cmap="plasma",
+                                      s=10, zorder=6, alpha=0.8, edgecolors="none")
+                plt.colorbar(sc_wc, ax=ax_wc, shrink=0.7, pad=0.02, label="Time [s]")
+                ax_wc.plot(PR_trb_sim[0], Wc_trb_sim[0], "g^", ms=11, zorder=7,
+                           label=f"t={t[0]:.1f}s (start)")
+                ax_wc.plot(PR_trb_sim[-1], Wc_trb_sim[-1], "rs", ms=11, zorder=7,
+                           label=f"t={t[-1]:.1f}s (end)")
+                ax_wc.legend(loc="best", fontsize=8)
+
+                if Eta_trb_sim is not None:
+                    sc_eta = ax_eta.scatter(PR_trb_sim, Eta_trb_sim, c=t, cmap="plasma",
+                                           s=10, zorder=6, alpha=0.8, edgecolors="none")
+                    plt.colorbar(sc_eta, ax=ax_eta, shrink=0.7, pad=0.02, label="Time [s]")
+                    ax_eta.plot(PR_trb_sim[0], Eta_trb_sim[0], "g^", ms=11, zorder=7)
+                    ax_eta.plot(PR_trb_sim[-1], Eta_trb_sim[-1], "rs", ms=11, zorder=7)
+
+                plt.show()
+                print(f"✓ Trb trajectory: PR={PR_trb_sim[0]:.2f}→{PR_trb_sim[-1]:.2f}, "
+                      f"Wc={Wc_trb_sim[0]:.3f}→{Wc_trb_sim[-1]:.3f}")
+                if Eta_trb_sim is not None:
+                    print(f"  Eta: {Eta_trb_sim[0]:.4f}→{Eta_trb_sim[-1]:.4f}")
+            elif not use_trb_bg:
+                # ── Trajectory only ──
+                ax_idx = n_base_cmp  # turbine subplot follows compressor in base fig
+                ax = axes[ax_idx] if ax_idx < len(axes) else axes[-1]
+
+                if has_trb_direct:
+                    x_data, y_data = PR_trb_sim, Wc_trb_sim
+                    x_label = "Expansion Ratio PR [-]"
+                    y_label = "Corrected Flow Wc [kg/s]"
+                    sub_title = "Turbine: PR vs Wc"
+                else:
+                    x_data, y_data = Wc_trb_sim, PR_trb_sim
+                    x_label = "Corrected Speed Nc_trb [rpm]"
+                    y_label = "Expansion Ratio ER [-]"
+                    sub_title = "Turbine: Nc vs ER (derived)"
+
+                self._draw_colored_trajectory(
+                    ax, x_data, y_data, t, norm, x_label, y_label, sub_title)
+
+                if col_eff_trb and col_eff_trb in mdf.columns:
+                    eta = mdf[col_eff_trb].to_numpy(dtype=float)
+                    n_ss = max(1, int(len(eta) * 0.1))
+                    eta_ss = np.mean(eta[-n_ss:])
+                    ax.annotate(
+                        f"η_ss={eta_ss:.3f}",
+                        xy=(np.mean(x_data[-n_ss:]), np.mean(y_data[-n_ss:])),
+                        xytext=(10, 10), textcoords="offset points",
+                        fontsize=9, color="purple",
+                        arrowprops=dict(arrowstyle="->", color="purple"),
+                    )
+
+        # Finalize simple layout (no map background case)
+        if ncols > 0:
+            sm_cbar = plt.cm.ScalarMappable(cmap="viridis", norm=norm)
+            sm_cbar.set_array([])
+            cbar = fig.colorbar(sm_cbar, ax=axes, shrink=0.8, pad=0.02)
+            cbar.set_label("Time [s]")
+            plt.show()
+
+        return None
+
+    @staticmethod
+    def _draw_colored_trajectory(ax, x, y, t_arr, norm, xlabel, ylabel, subtitle):
+        """Draw time-colored trajectory with start/end markers."""
+        from matplotlib.collections import LineCollection
+        points = np.column_stack([x, y]).reshape(-1, 1, 2)
+        segments = np.concatenate([points[:-1], points[1:]], axis=1)
+        lc = LineCollection(segments, cmap="viridis", norm=norm, lw=2, alpha=0.8)
+        lc.set_array(t_arr[:-1])
+        ax.add_collection(lc)
+        ax.autoscale()
+        ax.plot(x[0], y[0], "go", ms=10, zorder=5, label="Start")
+        ax.plot(x[-1], y[-1], "rs", ms=10, zorder=5, label="End")
+        n_ss = max(1, int(len(x) * 0.1))
+        x_ss, y_ss = np.mean(x[-n_ss:]), np.mean(y[-n_ss:])
+        ax.plot(x_ss, y_ss, "k*", ms=14, zorder=6, label=f"SS ({x_ss:.2f}, {y_ss:.2f})")
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_title(subtitle)
+        ax.legend(fontsize=8, loc="best")
+        ax.grid(True, alpha=0.3)
+        return lc
 
     # ── Thermodynamic cycle diagram ────────────────────────────────────
 
@@ -775,21 +1208,82 @@ class TBPostProcessor:
             return last, KEY_SUFFIXES[last]
         return None, None
 
-    def _get_signal(self, expr: str) -> tuple[np.ndarray | None, np.ndarray | None]:
+    def _get_signal(self, expr: str, verbose: bool = False) -> tuple[np.ndarray | None, np.ndarray | None]:
         post = self._tb.post
         attempts = [
             {"expressions": [expr], "domain": "Time", "setup_sweep_name": self._setup_name},
             {"expressions": [expr], "domain": "Time"},
         ]
+        last_error: str | None = None
         for kwargs in attempts:
             try:
                 sol_data = post.get_solution_data(**kwargs)
                 if sol_data is None:
+                    last_error = f"get_solution_data returned None (kwargs={kwargs})"
                     continue
-                t = np.asarray(sol_data.primary_sweep_values, dtype=float)
-                y = np.asarray(sol_data.data_real(expr), dtype=float)
-                if len(t) > 0 and len(y) > 0:
+                # pyaedt 1.0: use get_expression_data() which returns (x, y) tuple
+                # fallback to legacy data_real() for older versions
+                t, y = self._extract_xy(sol_data, expr)
+                if t is not None and len(t) > 0 and len(y) > 0:
                     return t, y
-            except Exception:
+                last_error = f"empty arrays: len(t)={0 if t is None else len(t)}, len(y)={0 if y is None else len(y)}"
+            except Exception as exc:
+                last_error = f"{type(exc).__name__}: {exc}"
                 continue
+
+        # ── Suffix fallback: expression name may have changed (new prefix) ──
+        suffix, _ = self._match_key(expr)
+        if suffix and hasattr(self, "_suffix_to_expr"):
+            resolved = self._suffix_to_expr.get(suffix)
+            if resolved and resolved != expr:
+                if verbose:
+                    print(f"  [fallback] '{expr}' → trying '{resolved}'")
+                for kwargs in [
+                    {"expressions": [resolved], "domain": "Time", "setup_sweep_name": self._setup_name},
+                    {"expressions": [resolved], "domain": "Time"},
+                ]:
+                    try:
+                        sol_data = post.get_solution_data(**kwargs)
+                        if sol_data is None:
+                            continue
+                        t, y = self._extract_xy(sol_data, resolved)
+                        if t is not None and len(t) > 0 and len(y) > 0:
+                            return t, y
+                    except Exception:
+                        continue
+                last_error = f"suffix fallback also failed for '{resolved}'"
+
+        if verbose and last_error:
+            print(f"  [_get_signal] '{expr}' FAILED: {last_error}")
+        return None, None
+
+    @staticmethod
+    def _extract_xy(sol_data, expr: str) -> tuple[np.ndarray | None, np.ndarray | None]:
+        """Extract (time, value) arrays from SolutionData using correct API version."""
+        # pyaedt >= 1.0 (ansys-aedt-core): get_expression_data returns (x, y)
+        if hasattr(sol_data, "get_expression_data"):
+            # Check if expression key matches what SolutionData knows
+            available = sol_data.expressions if hasattr(sol_data, "expressions") else []
+            target = expr
+            if expr not in available and available:
+                # Try matching by suffix (expression may be stored without experiment prefix)
+                for avail_expr in available:
+                    if avail_expr.endswith(expr) or expr.endswith(avail_expr):
+                        target = avail_expr
+                        break
+                    # Also try matching after last dot
+                    expr_tail = expr.rsplit(".", 1)[-1]
+                    avail_tail = avail_expr.rsplit(".", 1)[-1]
+                    if expr_tail == avail_tail:
+                        target = avail_expr
+                        break
+            x, y = sol_data.get_expression_data(expression=target, formula="real")
+            if len(x) > 0 and len(y) > 0:
+                return np.asarray(x, dtype=float), np.asarray(y, dtype=float)
+        # Legacy pyaedt (< 1.0): data_real() method
+        if hasattr(sol_data, "data_real") and callable(sol_data.data_real):
+            t = np.asarray(sol_data.primary_sweep_values, dtype=float)
+            y = np.asarray(sol_data.data_real(expr), dtype=float)
+            if len(t) > 0 and len(y) > 0:
+                return t, y
         return None, None
